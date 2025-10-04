@@ -2,7 +2,6 @@
 // Product images with category-based matching, each product gets unique variant.
 
 import type { Product } from "../types";
-import { hash32 } from "./utils";
 
 // Multiple images per category for variety
 const CATEGORY_IMAGES: Record<string, string[]> = {
