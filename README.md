@@ -58,24 +58,30 @@ All cart state is managed with a `useReducer` + Context pattern:
 ---
 
 ## 📁 Project Structure
+
 src/
-├── components/
-│ ├── Navbar.tsx
-│ ├── AISearchBar.tsx
-│ ├── ProductCard.tsx
-│ ├── CartDrawer.tsx
-│ └── Filters.tsx
-├── pages/
-│ ├── Home.tsx
-│ └── ProductDetail.tsx
-├── store/
-│ └── cart.tsx
-├── lib/
-│ └── ai.ts
-├── mocks/
-│ └── products.ts
-├── App.tsx
-└── main.tsx
+ ├── components/
+ │    ├── Navbar.tsx
+ │    ├── AISearchBar.tsx
+ │    ├── ProductCard.tsx
+ │    ├── CartDrawer.tsx
+ │    └── Filters.tsx
+ │
+ ├── pages/
+ │    ├── Home.tsx
+ │    └── ProductDetail.tsx
+ │
+ ├── store/
+ │    └── cart.tsx
+ │
+ ├── lib/
+ │    └── ai.ts
+ │
+ ├── mocks/
+ │    └── products.ts
+ │
+ ├── App.tsx
+ └── main.tsx
 
 ---
 
