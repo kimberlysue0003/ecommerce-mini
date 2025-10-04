@@ -59,6 +59,7 @@ All cart state is managed with a `useReducer` + Context pattern:
 
 ## 📁 Project Structure
 
+```text
 src/
  ├── components/
  │    ├── Navbar.tsx
