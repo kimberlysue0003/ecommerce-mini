@@ -3,34 +3,20 @@
 // Similar products remain the same (tags/keywords + price proximity + rating).
 
 import { useParams, Link } from "react-router-dom";
-import { products, type Product } from "../mocks/products";
+import { useMemo } from "react";
+import { products } from "../mocks/products";
+import type { Product } from "../types";
 import ProductCard from "../components/ProductCard";
 import SmartImage from "../components/SmartImage";
 import { productImageSources } from "../lib/images";
 import { useCart } from "../store/cart";
+import { formatPrice } from "../lib/utils";
+import { SYNONYMS } from "../constants/synonyms";
 
 /* ------------------------ similarity helpers ------------------------ */
 
-const SYNONYMS: Record<string, string[]> = {
-  headphones: ["headset", "earphone", "audio"],
-  headset: ["headphones", "earphone", "audio"],
-  bluetooth: ["wireless"],
-  wireless: ["bluetooth"],
-  keyboard: ["kb", "keyboards"],
-  mechanical: ["mech"],
-  mouse: ["mice", "pointer"],
-  speaker: ["soundbar", "audio"],
-  soundbar: ["speaker", "audio"],
-  webcam: ["camera", "video"],
-  microphone: ["mic", "audio"],
-  mic: ["microphone", "audio"],
-  monitor: ["display", "screen"],
-  display: ["monitor", "screen"],
-  screen: ["monitor", "display"],
-  chair: ["office", "ergonomic"],
-  ergonomic: ["chair", "office"],
-  office: ["chair", "ergonomic"],
-};
+// Price proximity window (in cents) - products within ~$500 get a boost
+const PRICE_PROXIMITY_WINDOW = 50000;
 
 function tokenize(p: Product): string[] {
   return [
@@ -57,7 +43,7 @@ function similarity(a: Product, b: Product): number {
 
   // Price proximity (cents → ~$500 window gives up to +2)
   const priceGap = Math.abs(a.price - b.price);
-  const priceBoost = Math.max(0, 2 - priceGap / 50000);
+  const priceBoost = Math.max(0, 2 - priceGap / PRICE_PROXIMITY_WINDOW);
 
   // Small rating preference
   const ratingBoost = (b.rating - 3.5) * 0.3;
@@ -86,7 +72,7 @@ export default function ProductDetail() {
   // SAME deterministic source list as cards (picsum → placeholder)
   const heroSources = productImageSources(product);
 
-  const similar = getSimilarProducts(product, products, 4);
+  const similar = useMemo(() => getSimilarProducts(product, products, 4), [product]);
 
   return (
     <div className="space-y-10">
@@ -100,7 +86,7 @@ export default function ProductDetail() {
         />
         <div className="col-span-6">
           <h1 className="text-2xl font-semibold">{product.title}</h1>
-          <p className="text-gray-500 mt-2">${(product.price / 100).toFixed(2)}</p>
+          <p className="text-gray-500 mt-2">{formatPrice(product.price)}</p>
 
           <button
             className="mt-6 rounded-xl bg-black px-4 py-2 text-white"

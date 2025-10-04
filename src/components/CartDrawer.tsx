@@ -9,6 +9,7 @@ import { useMemo } from "react";
 import { useCart } from "../store/cart";
 import SmartImage from "./SmartImage";
 import { productThumbSources } from "../lib/images";
+import { formatPrice } from "../lib/utils";
 
 type Props = { open: boolean; onClose: () => void };
 
@@ -63,7 +64,7 @@ export default function CartDrawer({ open, onClose }: Props) {
                 <div className="flex-1 min-w-0">
                   <div className="font-medium line-clamp-1">{p.title}</div>
                   <div className="text-sm text-gray-500">
-                    ${(Number(p.price || 0) / 100).toFixed(2)}
+                    {formatPrice(p.price)}
                   </div>
 
                   {/* quantity controls */}
@@ -86,7 +87,7 @@ export default function CartDrawer({ open, onClose }: Props) {
 
                     <button
                       className="ml-auto text-red-600 text-sm"
-                      onClick={() => dispatch({ type: "remove", productId: p.id, id: p.id })}
+                      onClick={() => dispatch({ type: "remove", productId: p.id })}
                       aria-label="Remove item"
                     >
                       Remove
@@ -101,11 +102,11 @@ export default function CartDrawer({ open, onClose }: Props) {
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-white">
           <div className="flex items-center justify-between mb-3">
             <div className="text-sm text-gray-500">Subtotal</div>
-            <div className="text-lg font-semibold">${(subtotalCents / 100).toFixed(2)}</div>
+            <div className="text-lg font-semibold">{formatPrice(subtotalCents)}</div>
           </div>
           <button
             className="w-full rounded-xl bg-black text-white py-2 disabled:opacity-60"
-            onClick={() => alert(`Mock checkout: total $${(subtotalCents / 100).toFixed(2)}`)}
+            onClick={() => alert(`Mock checkout: total ${formatPrice(subtotalCents)}`)}
             disabled={items.length === 0}
           >
             Checkout (mock)

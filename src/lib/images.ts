@@ -2,17 +2,8 @@
 // Single-source consistency with deterministic Picsum URLs.
 // Fallback: local placeholder to avoid broken images in restricted networks.
 
-import type { Product } from "../mocks/products";
-
-// FNV-1a 32-bit hash to generate a stable numeric seed per product
-function hash32(s: string) {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = (h * 16777619) >>> 0;
-  }
-  return h >>> 0;
-}
+import type { Product } from "../types";
+import { hash32 } from "./utils";
 
 // Build a seeded Picsum URL for a given size
 function picsum(seed: number, w: number, h: number) {

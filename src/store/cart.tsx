@@ -3,13 +3,10 @@
 // Persistent via localStorage. All comments in English.
 
 import React, { createContext, useContext, useEffect, useMemo, useReducer } from "react";
-import type { Product } from "../mocks/products";
-
-export type CartItem = { product: Product; quantity: number };
-export type CartState = { items: CartItem[] };
+import type { CartItem, CartState, Product } from "../types";
 
 type AddAction = { type: "add"; product: Product; delta?: number };
-type RemoveAction = { type: "remove"; productId?: string; id?: string };
+type RemoveAction = { type: "remove"; productId: string };
 type DecrementAction = { type: "decrement"; productId: string; by?: number };
 type SetQtyAction = { type: "setQuantity"; productId: string; quantity: number };
 type ClearAction = { type: "clear" };
@@ -43,7 +40,11 @@ function loadInitialState(): CartState {
 function saveState(state: CartState) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {}
+  } catch (err) {
+    if (import.meta.env.DEV) {
+      console.warn("Failed to save cart to localStorage:", err);
+    }
+  }
 }
 
 function cartReducer(state: CartState, action: CartAction): CartState {
@@ -96,9 +97,8 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     }
 
     case "remove": {
-      const id = action.productId ?? action.id;
-      if (!id) return state;
-      return { items: state.items.filter((it) => it.product.id !== String(id)) };
+      const id = action.productId;
+      return { items: state.items.filter((it) => it.product.id !== id) };
     }
 
     case "clear":

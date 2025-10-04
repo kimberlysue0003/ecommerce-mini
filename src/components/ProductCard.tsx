@@ -3,10 +3,11 @@
 
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import type { Product } from "../mocks/products";
+import type { Product } from "../types";
 import { useCart } from "../store/cart";
 import { productThumbSources } from "../lib/images";
 import SmartImage from "./SmartImage";
+import { formatPrice } from "../lib/utils";
 
 export default function ProductCard({ product }: { product: Product }) {
   const { dispatch } = useCart();
@@ -22,7 +23,7 @@ export default function ProductCard({ product }: { product: Product }) {
           loading="lazy"
         />
         <div className="font-medium line-clamp-1">{product.title}</div>
-        <div className="mt-1 text-gray-500">${(product.price / 100).toFixed(2)}</div>
+        <div className="mt-1 text-gray-500">{formatPrice(product.price)}</div>
       </Link>
       <button
         onClick={() => {
