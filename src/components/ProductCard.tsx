@@ -20,7 +20,6 @@ export default function ProductCard({ product }: { product: Product }) {
           sources={sources}
           alt={product.title}
           className="h-40 w-full rounded-lg object-cover mb-3"
-          loading="lazy"
         />
         <div className="font-medium line-clamp-1">{product.title}</div>
         <div className="mt-1 text-gray-500">{formatPrice(product.price)}</div>
