@@ -1,73 +1,106 @@
-# React + TypeScript + Vite
+# 🛍️ E-commerce Mini Demo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A lightweight **React + TypeScript** e-commerce showcase built by **Kimberly Su**, demonstrating front-end architecture, AI-powered search, and an interactive shopping cart — all within a week’s scope.
 
-Currently, two official plugins are available:
+This version runs **fully client-side** (no backend yet) and highlights clean UI, modular code, and extendable design for future full-stack integration.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Frontend**
+- React 18 + TypeScript + Vite  
+- TailwindCSS + Framer Motion (UI + animations)  
+- React Router v6  
+- TanStack Query (future-ready for API data fetching)
 
-## Expanding the ESLint configuration
+**State & Logic**
+- Custom Cart Store (Context + Reducer + localStorage persistence)  
+- Rule-based “AI Search” for natural language parsing  
+- Reusable Components with clean TypeScript types  
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🧠 AI Search (Rule-based NLP)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+The search bar accepts **natural language queries** and converts them into structured filters:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+| Example Query | Parsed Result |
+|----------------|----------------|
+| `bluetooth headphones under $100` | keywords: bluetooth, price ≤ 100 |
+| `keyboard 300-600` | price range: 300–600 |
+| `over 200 webcam` | price ≥ 200, keyword: webcam |
+| `between 50 and 150 mouse` | range + keyword |
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### How it works
+1. A lightweight parser (`src/lib/ai.ts`) tokenizes price-related expressions.  
+2. Generates `{ text, priceMin, priceMax }` filters.  
+3. Filters product list locally (client-side simulation of semantic search).  
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+This mimics an AI-driven UX, and can later be upgraded to:
+- Query rewriting via OpenAI API  
+- Semantic product retrieval with embeddings  
+- Personalized recommendation (based on user events)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## 🛒 Shopping Cart (Client-Side)
+
+- Add to Cart from any product card  
+- Adjust quantity / remove item inside the cart drawer  
+- Subtotal auto-calculation  
+- Data persisted in `localStorage`  
+- Mock checkout button (`Checkout (mock)`)
+
+All cart state is managed with a `useReducer` + Context pattern:
+`src/store/cart.tsx`
+
+---
+
+## 📁 Project Structure
+src/
+├── components/
+│ ├── Navbar.tsx
+│ ├── AISearchBar.tsx
+│ ├── ProductCard.tsx
+│ ├── CartDrawer.tsx
+│ └── Filters.tsx
+├── pages/
+│ ├── Home.tsx
+│ └── ProductDetail.tsx
+├── store/
+│ └── cart.tsx
+├── lib/
+│ └── ai.ts
+├── mocks/
+│ └── products.ts
+├── App.tsx
+└── main.tsx
+
+---
+
+## 💡 Planned Extensions (Next Phase)
+
+- **Backend API** — Node.js (Fastify) + Prisma + PostgreSQL  
+- **User Auth & Orders** — JWT login, checkout pipeline  
+- **AI Assistant API** — OpenAI query interpretation + recommendations  
+- **Deployment** — Frontend on Vercel, Backend on Railway  
+
+---
+
+## 🖥️ How to Run Locally
+
+```bash
+git clone https://github.com/<your-username>/ecommerce-mini.git
+cd ecommerce-mini
+npm install
+npm run dev
+
+
+Visit http://localhost:5173
+ 🚀
+
+✨ Author
+Kimberly Su
+Senior Frontend / Full-Stack Engineer
+14+ years experience in Game Dev, 3D/VR/AR & Web Engineering
