@@ -6,17 +6,26 @@ export const GRAPHQL_URL = import.meta.env.VITE_GRAPHQL_URL || 'http://localhost
 // API helper functions
 export async function fetchAPI(endpoint: string, options?: RequestInit) {
   const url = `${API_BASE_URL}${endpoint}`;
+  const token = getAuthToken();
 
   const response = await fetch(url, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options?.headers,
     },
   });
 
   if (!response.ok) {
-    throw new Error(`API error: ${response.statusText}`);
+    // Try to get error details from response body
+    try {
+      const errorData = await response.json();
+      const errorMessage = errorData.error || errorData.message || response.statusText;
+      throw new Error(`API error: ${errorMessage}`);
+    } catch (e) {
+      throw new Error(`API error: ${response.statusText}`);
+    }
   }
 
   return response.json();

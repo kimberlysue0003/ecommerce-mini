@@ -5,16 +5,20 @@
 // Thumbnails use productThumbSources + <SmartImage>.
 
 import { X } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useCart } from "../store/cart";
+import { useAuth } from "../store/auth";
 import SmartImage from "./SmartImage";
 import { productThumbSources } from "../lib/images";
 import { formatPrice } from "../lib/utils";
+import CheckoutModal from "./CheckoutModal";
 
 type Props = { open: boolean; onClose: () => void };
 
 export default function CartDrawer({ open, onClose }: Props) {
   const { state, dispatch } = useCart();
+  const { isAuthenticated } = useAuth();
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   // items are { product, quantity }
   const items = Array.isArray(state?.items) ? state.items : [];
@@ -105,14 +109,37 @@ export default function CartDrawer({ open, onClose }: Props) {
             <div className="text-lg font-semibold">{formatPrice(subtotalCents)}</div>
           </div>
           <button
-            className="w-full rounded-xl bg-black text-white py-2 disabled:opacity-60"
-            onClick={() => alert(`Mock checkout: total ${formatPrice(subtotalCents)}`)}
+            className="w-full rounded-xl bg-black text-white py-2 disabled:opacity-60 hover:bg-gray-800 transition"
+            onClick={() => {
+              if (!isAuthenticated) {
+                alert('Please login to checkout');
+                return;
+              }
+              setCheckoutOpen(true);
+            }}
             disabled={items.length === 0}
           >
-            Checkout (mock)
+            Checkout
           </button>
         </div>
       </div>
+
+      <CheckoutModal
+        isOpen={checkoutOpen}
+        onClose={() => setCheckoutOpen(false)}
+        total={subtotalCents}
+        items={items.map(item => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+        }))}
+        onSuccess={() => {
+          // Clear cart after successful payment
+          items.forEach(item => {
+            dispatch({ type: 'remove', productId: item.product.id });
+          });
+          alert('Payment successful! Your order has been placed.');
+        }}
+      />
     </div>
   );
 }

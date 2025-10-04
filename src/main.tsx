@@ -6,7 +6,8 @@ import App from "./App";
 import Home from "./pages/Home.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import "./index.css";
-import { CartProvider } from "./store/cart"; 
+import { CartProvider } from "./store/cart";
+import { AuthProvider } from "./store/auth"; 
 
 const queryClient = new QueryClient();
 
@@ -20,9 +21,11 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <CartProvider>                                   {}
-        <RouterProvider router={router} />
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <RouterProvider router={router} />
+        </CartProvider>
+      </AuthProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );

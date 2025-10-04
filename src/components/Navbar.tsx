@@ -3,13 +3,18 @@
 
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { LogIn, User, LogOut } from "lucide-react";
 import CartDrawer from "./CartDrawer";
+import LoginModal from "./LoginModal";
 import { useCart } from "../store/cart";
+import { useAuth } from "../store/auth";
 
 export default function Navbar() {
   const BRAND = "MiniShop";
   const { state } = useCart();
-  const [open, setOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
+  const [cartOpen, setCartOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
 
   const items = Array.isArray(state?.items) ? state.items : [];
   const count = items.reduce((sum, it) => sum + it.quantity, 0);
@@ -56,24 +61,64 @@ export default function Navbar() {
               </span>
             </Link>
 
-            {/* Cart button */}
-            <button
-              onClick={() => setOpen(true)}
-              className="relative flex items-center gap-1 rounded-lg border px-3 py-1.5
-                         text-sm text-slate-700 bg-white hover:bg-slate-50 transition"
-            >
-              🛒 Cart
-              {count > 0 && (
-                <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full px-1.5 py-0.5">
-                  {count}
-                </span>
+            {/* User actions */}
+            <div className="flex items-center gap-2">
+              {/* Login/User button */}
+              {isAuthenticated && user ? (
+                <div className="relative group">
+                  <button
+                    className="flex items-center gap-2 rounded-lg border px-3 py-1.5
+                               text-sm text-slate-700 bg-white hover:bg-slate-50 transition"
+                  >
+                    <User size={16} />
+                    <span>{user.name || user.email}</span>
+                  </button>
+
+                  {/* Dropdown menu */}
+                  <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg
+                                  opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                                  transition-all duration-200">
+                    <button
+                      onClick={logout}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-sm text-slate-700
+                                 hover:bg-slate-50 rounded-lg transition"
+                    >
+                      <LogOut size={16} />
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setLoginOpen(true)}
+                  className="flex items-center gap-2 rounded-lg border px-3 py-1.5
+                             text-sm text-slate-700 bg-white hover:bg-slate-50 transition"
+                >
+                  <LogIn size={16} />
+                  Login
+                </button>
               )}
-            </button>
+
+              {/* Cart button */}
+              <button
+                onClick={() => setCartOpen(true)}
+                className="relative flex items-center gap-1 rounded-lg border px-3 py-1.5
+                           text-sm text-slate-700 bg-white hover:bg-slate-50 transition"
+              >
+                🛒 Cart
+                {count > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full px-1.5 py-0.5">
+                    {count}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      <CartDrawer open={open} onClose={() => setOpen(false)} />
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+      <LoginModal isOpen={loginOpen} onClose={() => setLoginOpen(false)} />
     </>
   );
 }

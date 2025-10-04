@@ -17,6 +17,7 @@ import productRoutes from './routes/products.js';
 import cartRoutes from './routes/cart.js';
 import orderRoutes from './routes/orders.js';
 import aiRoutes from './routes/ai.js';
+import paymentRoutes from './routes/payment.routes.js';
 
 // Import GraphQL
 import { typeDefs } from './graphql/schema.js';
@@ -71,6 +72,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // GraphQL endpoint
 const yoga = createYoga({
