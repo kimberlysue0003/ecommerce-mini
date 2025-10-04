@@ -83,7 +83,7 @@ src/
  │
  ├── App.tsx
  └── main.tsx
-
+```
 ---
 
 ## 💡 Planned Extensions (Next Phase)
