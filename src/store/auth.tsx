@@ -1,7 +1,7 @@
 // Auth context for user authentication state management
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getAuthToken, setAuthToken, clearAuthToken } from '../config/api';
+import { getAuthToken, setAuthToken, clearAuthToken, API_BASE_URL } from '../config/api';
 
 interface User {
   id: string;
@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function fetchCurrentUser(token: string) {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/me', {
+      const response = await fetch(`${API_BASE_URL}/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -81,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function login(email: string, password: string) {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
