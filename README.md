@@ -1,8 +1,10 @@
-# 🛍️ E-commerce Full-Stack Demo
+# 🛍️ E-commerce Full-Stack Production Demo
 
-A production-ready **Full-Stack E-commerce Application** built by **Kimberly Su**, showcasing modern web development with **React + TypeScript** frontend, **Node.js + PostgreSQL** backend, **AI-powered search**, and complete **DevOps** setup.
+A **production-deployed** Full-Stack E-commerce Application built by **Kimberly Su**, showcasing enterprise-grade web development with **React 19 + TypeScript**, **Node.js + PostgreSQL**, **Stripe Payment Integration**, **AI-powered search**, and complete **AWS cloud deployment**.
 
-**🎯 Built to demonstrate:** Senior Full-Stack Engineering capabilities with focus on TypeScript, REST/GraphQL APIs, Database Design, AI Integration, Docker, and CI/CD.
+**🌐 Live Demo:** [https://www.quickshop.fit](https://www.quickshop.fit)
+
+**🎯 Built to demonstrate:** Senior Full-Stack Engineering capabilities with TypeScript, REST/GraphQL APIs, Database Design, Payment Processing, AI Integration, AWS Cloud Architecture, and Production DevOps.
 
 ---
 
@@ -28,10 +30,19 @@ A production-ready **Full-Stack E-commerce Application** built by **Kimberly Su*
 - **Collaborative Filtering** recommendations
 - **User Behavior Tracking**
 
-### DevOps & Infrastructure
-- **Docker** + **Docker Compose**
-- **GitHub Actions** CI/CD
-- **Production-ready** deployment configs
+### Payment & Business Logic
+- **Stripe Payment Gateway** (Test & Production modes)
+- **Order Management System**
+- **Transaction Processing**
+
+### Cloud & DevOps (AWS Production Deployment)
+- **AWS EC2** - Backend API hosting with PM2
+- **AWS RDS** - PostgreSQL managed database
+- **AWS Amplify** - Frontend hosting with CI/CD
+- **Nginx** - Reverse proxy with SSL termination
+- **Let's Encrypt** - Free SSL/TLS certificates
+- **Custom Domain** - quickshop.fit with HTTPS
+- **Docker** + **Docker Compose** - Local development
 
 ---
 
@@ -46,11 +57,12 @@ Natural language product search with intelligent parsing:
 ```
 
 ### 🛒 Complete E-commerce Flow
-- Product browsing with filters
-- Shopping cart with quantity management
-- User authentication (JWT)
-- Order creation and tracking
-- User behavior analytics
+- Product browsing with advanced filters and search
+- Real-time shopping cart with quantity management
+- User authentication & authorization (JWT)
+- **Stripe Payment Integration** with test mode
+- Order creation, tracking, and history
+- User behavior analytics for personalization
 
 ### 🔐 Security & Best Practices
 - Password hashing (bcrypt)
@@ -62,37 +74,41 @@ Natural language product search with intelligent parsing:
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Production Architecture (AWS)
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Frontend (React)                      │
-│              http://localhost:5173                       │
-│  ┌──────────┬──────────┬──────────┬──────────────────┐  │
-│  │  Home    │ Product  │  Cart    │  AI Search       │  │
-│  │  Page    │ Detail   │ Drawer   │  Component       │  │
-│  └──────────┴──────────┴──────────┴──────────────────┘  │
-└─────────────────────┬───────────────────────────────────┘
-                      │ HTTP/REST API
-                      ↓
-┌─────────────────────────────────────────────────────────┐
-│              Backend API (Node.js + Express)             │
-│              http://localhost:3000                       │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │  REST API        │  GraphQL      │  AI Services  │   │
-│  │  /api/*          │  /graphql     │  NLP Parser   │   │
-│  │                  │               │  TF-IDF       │   │
-│  └──────────────────────────────────────────────────┘   │
-└─────────────────────┬───────────────────────────────────┘
-                      │ Prisma ORM
-                      ↓
-┌─────────────────────────────────────────────────────────┐
-│           PostgreSQL Database (Docker)                   │
-│              Port 5433                                   │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │  Users │ Products │ Orders │ Cart │ Behaviors   │   │
-│  └──────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│                   AWS Amplify (Frontend CDN)                     │
+│              https://www.quickshop.fit                           │
+│                   React 19 + TypeScript                          │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │  Home Page │ Product Detail │ Cart │ AI Search │ Checkout │ │
+│  └────────────────────────────────────────────────────────────┘ │
+└────────────────────────────┬─────────────────────────────────────┘
+                             │ HTTPS/REST API
+                             ↓
+┌──────────────────────────────────────────────────────────────────┐
+│              AWS EC2 (Ubuntu + Nginx + PM2)                      │
+│              https://api.quickshop.fit                           │
+│                   Let's Encrypt SSL                              │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │  REST API  │  GraphQL   │  AI Engine  │  Stripe Payment  │  │
+│  │  /api/*    │  /graphql  │  NLP/TF-IDF │  Integration     │  │
+│  └────────────────────────────────────────────────────────────┘ │
+└────────────────────────────┬─────────────────────────────────────┘
+                             │ Prisma ORM (SSL)
+                             ↓
+┌──────────────────────────────────────────────────────────────────┐
+│              AWS RDS PostgreSQL (Managed Database)               │
+│              ap-southeast-1 (Singapore)                          │
+│              Free Tier: db.t4g.micro                             │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │  Users │ Products │ Orders │ Cart │ Payments │ Behaviors │  │
+│  └────────────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────────┘
+
+External Services:
+  └─> Stripe Payment API (Test Mode)
 ```
 
 ---
@@ -128,8 +144,10 @@ npm run dev  # Frontend starts on port 5173
 ```
 
 **Access:**
-- 🌐 Frontend: http://localhost:5173
-- 🔌 REST API: http://localhost:3000/api
+- 🌐 Frontend (Local): http://localhost:5173
+- 🌐 Frontend (Production): https://www.quickshop.fit
+- 🔌 REST API (Local): http://localhost:3000/api
+- 🔌 REST API (Production): https://api.quickshop.fit/api
 - 🔮 GraphQL: http://localhost:3000/graphql
 
 ### Option 2: Docker Compose (One Command)
@@ -172,6 +190,12 @@ DELETE /api/cart/:itemId      # Remove item
 POST   /api/orders            # Create order
 GET    /api/orders            # Get user's orders
 GET    /api/orders/:id        # Get order details
+```
+
+**Payment** (Requires Authentication)
+```http
+POST   /api/payment/create-payment-intent    # Create Stripe payment
+POST   /api/payment/confirm                  # Confirm payment & create order
 ```
 
 **AI Features**
@@ -295,39 +319,67 @@ relevance × 0.5 + rating × 0.3 + popularity × 0.2
 
 ---
 
-## 🚢 Deployment
+## 🚢 Production Deployment (AWS)
 
-### Backend Deployment (AWS/Railway/Render)
+This application is **currently deployed on AWS** with the following architecture:
 
-1. **Setup PostgreSQL database** (AWS RDS, Railway, etc.)
-2. **Set environment variables:**
-   ```bash
-   DATABASE_URL=postgresql://user:pass@host:5432/db
-   JWT_SECRET=your-secret-key-min-32-chars
-   NODE_ENV=production
-   ```
-3. **Deploy:**
-   ```bash
-   npm run build
-   npm start
-   ```
+### Infrastructure Setup
 
-### Frontend Deployment (Vercel/Netlify)
+**1. AWS RDS PostgreSQL Database**
+- Instance: `db.t4g.micro` (Free Tier)
+- Region: `ap-southeast-1` (Singapore)
+- Automatic backups enabled
+- SSL/TLS encryption in transit
 
-1. **Update API URLs** in `.env`:
-   ```bash
-   VITE_API_URL=https://your-backend.com/api
-   ```
-2. **Deploy:**
-   ```bash
-   npm run build
-   # Upload dist/ folder
-   ```
+**2. AWS EC2 Backend Server**
+- Instance: `t3.micro` (Free Tier eligible)
+- OS: Ubuntu 24.04 LTS
+- Process Manager: PM2 (auto-restart on crash)
+- Reverse Proxy: Nginx with SSL termination
+- SSL Certificate: Let's Encrypt (auto-renewal)
 
-### Docker Deployment
+**3. AWS Amplify Frontend Hosting**
+- Global CDN distribution
+- Automatic CI/CD from GitHub
+- Free SSL certificate
+- Custom domain: `www.quickshop.fit`
 
+**4. Custom Domain Configuration**
+- Domain: `quickshop.fit` (Namecheap)
+- Frontend: `www.quickshop.fit` → AWS Amplify
+- Backend API: `api.quickshop.fit` → AWS EC2
+- SSL/TLS: Let's Encrypt certificates
+
+### Deployment Steps (Automated)
+
+**Backend (EC2):**
 ```bash
-docker-compose up -d
+# PM2 automatically restarts on code changes
+git pull origin main
+npm install
+npm run build
+pm2 restart all
+```
+
+**Frontend (Amplify):**
+- Automatic deployment on `git push` to main branch
+- Build command: `npm run build`
+- Deploy time: ~2-3 minutes
+
+### Environment Variables (Production)
+
+**Backend (.env on EC2):**
+```bash
+DATABASE_URL=postgresql://[RDS_ENDPOINT]/ecommerce
+JWT_SECRET=[32-char-secret]
+STRIPE_SECRET_KEY=[stripe-key]
+NODE_ENV=production
+```
+
+**Frontend (.env.production):**
+```bash
+VITE_API_URL=https://api.quickshop.fit/api
+VITE_GRAPHQL_URL=https://api.quickshop.fit/graphql
 ```
 
 ---
@@ -336,16 +388,18 @@ docker-compose up -d
 
 This project demonstrates:
 
-✅ **Full-Stack TypeScript** - End-to-end type safety
-✅ **RESTful + GraphQL** - Dual API architecture
-✅ **Database Design** - Normalized schema with Prisma
-✅ **Authentication & Authorization** - JWT implementation
-✅ **AI/ML Algorithms** - TF-IDF, collaborative filtering
-✅ **Docker Containerization** - Production-ready setup
-✅ **CI/CD Pipeline** - Automated testing & deployment
-✅ **Security Best Practices** - Industry-standard measures
-✅ **Clean Architecture** - Separation of concerns
-✅ **Performance Optimization** - Caching, indexing
+✅ **Full-Stack TypeScript** - End-to-end type safety across frontend & backend
+✅ **RESTful + GraphQL** - Dual API architecture for flexibility
+✅ **Database Design** - Normalized PostgreSQL schema with Prisma ORM
+✅ **Authentication & Authorization** - Secure JWT implementation
+✅ **Payment Processing** - Stripe integration with secure checkout flow
+✅ **AI/ML Algorithms** - Custom TF-IDF & collaborative filtering (no external APIs)
+✅ **AWS Cloud Deployment** - Production infrastructure on EC2, RDS, Amplify
+✅ **DevOps & Infrastructure** - Nginx, PM2, Let's Encrypt SSL automation
+✅ **CI/CD Pipeline** - GitHub → Amplify auto-deployment
+✅ **Security Best Practices** - HTTPS, bcrypt, helmet, rate limiting, CORS
+✅ **Clean Architecture** - Layered design with separation of concerns
+✅ **Performance Optimization** - Database indexing, query optimization
 
 ---
 
@@ -361,13 +415,15 @@ This project demonstrates:
 ## 🔮 Future Enhancements
 
 See [backend/bonus.md](./backend/bonus.md) for planned features:
-- OpenAI GPT-4 integration
-- Redis caching layer
+- ✅ ~~Stripe payment gateway~~ **[IMPLEMENTED]**
+- ✅ ~~AWS production deployment~~ **[IMPLEMENTED]**
+- OpenAI GPT-4 integration for advanced search
+- Redis caching layer for performance
 - Elasticsearch full-text search
-- Stripe payment gateway
 - WebSocket real-time updates
-- Admin dashboard
-- Email notifications
+- Admin dashboard with analytics
+- Email notifications (order confirmations)
+- Product image uploads (S3 integration)
 
 ---
 
@@ -377,9 +433,8 @@ See [backend/bonus.md](./backend/bonus.md) for planned features:
 Senior Full-Stack Engineer
 14+ years experience in Game Dev, 3D/VR/AR & Web Engineering
 
-📧 Contact: [Your Email]
-🔗 LinkedIn: [Your LinkedIn]
-💼 Portfolio: [Your Portfolio]
+🌐 **Live Demo:** [https://www.quickshop.fit](https://www.quickshop.fit)
+💼 **GitHub:** [github.com/kimberlysue0003](https://github.com/kimberlysue0003)
 
 ---
 
@@ -392,14 +447,16 @@ MIT License - Feel free to use this project for learning or portfolio purposes!
 ## 🙏 Acknowledgments
 
 Built to showcase:
-- Modern full-stack development practices
-- TypeScript proficiency across frontend and backend
-- Database design and ORM usage
-- RESTful and GraphQL API design
-- AI/ML algorithm implementation (without paid services)
-- DevOps and containerization skills
-- Security best practices
-- Clean code architecture
+- **Production-Ready Full-Stack Development** - Real deployed application on AWS
+- **TypeScript Mastery** - End-to-end type safety and modern patterns
+- **Cloud Architecture** - AWS EC2, RDS, Amplify infrastructure design
+- **Payment Integration** - Stripe payment processing implementation
+- **RESTful + GraphQL APIs** - Dual API architecture design
+- **AI/ML Implementation** - Custom algorithms without expensive external APIs
+- **DevOps Excellence** - Nginx, PM2, SSL automation, CI/CD pipelines
+- **Security Best Practices** - HTTPS, authentication, rate limiting, validation
+- **Database Engineering** - PostgreSQL schema design with Prisma ORM
+- **Clean Architecture** - Scalable, maintainable codebase structure
 
 ---
 
