@@ -1,29 +1,47 @@
 import Filters from "../components/Filters";
 import ProductCard from "../components/ProductCard";
-import { products } from "../mocks/products";
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useState, useEffect } from "react";
 import AISearchBar from "../components/AISearchBar";
-import { parseQuery } from "../lib/ai";
 import ActiveChips from "../components/ActiveChips";
+import { getProducts, aiSearchProducts } from "../services/productService";
+import type { Product } from "../types";
 
 export default function Home() {
   const [q, setQ] = useState("");
   const [priceMin, setPriceMin] = useState<number | undefined>();
   const [priceMax, setPriceMax] = useState<number | undefined>();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = useMemo(() => {
-    const cond = parseQuery(q);
-    const min = priceMin != null ? priceMin * 100 : cond.priceMin;
-    const max = priceMax != null ? priceMax * 100 : cond.priceMax;
-    const kw  = cond.text?.toLowerCase();
+  // Fetch products from backend
+  useEffect(() => {
+    async function fetchProducts() {
+      setLoading(true);
+      try {
+        let results: Product[];
 
-    return products.filter(p => {
-      const okKW = !kw || p.title.toLowerCase().includes(kw) || p.tags.some(t => kw.includes(t));
-      const okMin = min == null || p.price >= min;
-      const okMax = max == null || p.price <= max;
-      return okKW && okMin && okMax;
-    });
+        // Use AI search if there's a query, otherwise get all products with filters
+        if (q.trim()) {
+          results = await aiSearchProducts(q);
+        } else {
+          results = await getProducts({
+            minPrice: priceMin,
+            maxPrice: priceMax,
+            limit: 50,
+          });
+        }
+
+        setProducts(results);
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProducts();
   }, [q, priceMin, priceMax]);
 
   return (
@@ -43,14 +61,20 @@ export default function Home() {
             setPriceMax(undefined);
           }}
         />
-        <motion.div layout className="grid grid-cols-3 gap-6">
-          {filtered.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-          {filtered.length === 0 && (
-            <div className="col-span-3 text-gray-500">No results found.</div>
-          )}
-        </motion.div>
+        {loading ? (
+          <div className="col-span-3 text-center py-12 text-gray-500">
+            Loading products...
+          </div>
+        ) : (
+          <motion.div layout className="grid grid-cols-3 gap-6">
+            {products.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+            {products.length === 0 && (
+              <div className="col-span-3 text-gray-500">No results found.</div>
+            )}
+          </motion.div>
+        )}
       </section>
     </div>
   );

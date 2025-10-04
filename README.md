@@ -1,113 +1,408 @@
-# 🛍️ E-commerce Mini Demo
+# 🛍️ E-commerce Full-Stack Demo
 
-A lightweight **React + TypeScript** e-commerce showcase built by **Kimberly Su**, demonstrating front-end architecture, AI-powered search, and an interactive shopping cart — all within a week’s scope.
+A production-ready **Full-Stack E-commerce Application** built by **Kimberly Su**, showcasing modern web development with **React + TypeScript** frontend, **Node.js + PostgreSQL** backend, **AI-powered search**, and complete **DevOps** setup.
 
-This version runs **fully client-side** (no backend yet) and highlights clean UI, modular code, and extendable design for future full-stack integration.
+**🎯 Built to demonstrate:** Senior Full-Stack Engineering capabilities with focus on TypeScript, REST/GraphQL APIs, Database Design, AI Integration, Docker, and CI/CD.
 
 ---
 
 ## 🚀 Tech Stack
 
-**Frontend**
-- React 18 + TypeScript + Vite  
-- TailwindCSS + Framer Motion (UI + animations)  
-- React Router v6  
-- TanStack Query (future-ready for API data fetching)
+### Frontend
+- **React 19** + **TypeScript 5.7** + **Vite**
+- **TailwindCSS 4** + **Framer Motion** (UI + animations)
+- **React Router v7**
+- **TanStack Query** (API data fetching)
 
-**State & Logic**
-- Custom Cart Store (Context + Reducer + localStorage persistence)  
-- Rule-based “AI Search” for natural language parsing  
-- Reusable Components with clean TypeScript types  
+### Backend
+- **Node.js 20** + **TypeScript 5.7**
+- **Express.js** (REST API)
+- **GraphQL** (graphql-yoga)
+- **PostgreSQL 16** + **Prisma ORM**
+- **JWT Authentication** (jsonwebtoken)
+- **Security:** helmet, CORS, rate-limiting
 
----
+### AI Features (Free - No External APIs)
+- **Rule-based NLP** query parsing
+- **TF-IDF** content-based similarity
+- **Collaborative Filtering** recommendations
+- **User Behavior Tracking**
 
-## 🧠 AI Search (Rule-based NLP)
-
-The search bar accepts **natural language queries** and converts them into structured filters:
-
-| Example Query | Parsed Result |
-|----------------|----------------|
-| `bluetooth headphones under $100` | keywords: bluetooth, price ≤ 100 |
-| `keyboard 300-600` | price range: 300–600 |
-| `over 200 webcam` | price ≥ 200, keyword: webcam |
-| `between 50 and 150 mouse` | range + keyword |
-
-### How it works
-1. A lightweight parser (`src/lib/ai.ts`) tokenizes price-related expressions.  
-2. Generates `{ text, priceMin, priceMax }` filters.  
-3. Filters product list locally (client-side simulation of semantic search).  
-
-This mimics an AI-driven UX, and can later be upgraded to:
-- Query rewriting via OpenAI API  
-- Semantic product retrieval with embeddings  
-- Personalized recommendation (based on user events)
+### DevOps & Infrastructure
+- **Docker** + **Docker Compose**
+- **GitHub Actions** CI/CD
+- **Production-ready** deployment configs
 
 ---
 
-## 🛒 Shopping Cart (Client-Side)
+## ✨ Key Features
 
-- Add to Cart from any product card  
-- Adjust quantity / remove item inside the cart drawer  
-- Subtotal auto-calculation  
-- Data persisted in `localStorage`  
-- Mock checkout button (`Checkout (mock)`)
+### 🤖 AI-Powered Search
+Natural language product search with intelligent parsing:
+```
+"wireless headphones under $100" → filters by keywords + price
+"mechanical keyboard 300-600"    → price range filtering
+"best rated monitors"            → sort by rating
+```
 
-All cart state is managed with a `useReducer` + Context pattern:
-`src/store/cart.tsx`
+### 🛒 Complete E-commerce Flow
+- Product browsing with filters
+- Shopping cart with quantity management
+- User authentication (JWT)
+- Order creation and tracking
+- User behavior analytics
+
+### 🔐 Security & Best Practices
+- Password hashing (bcrypt)
+- JWT token authentication
+- Rate limiting (100 req/15min)
+- CORS protection
+- Input validation (Zod)
+- SQL injection prevention (Prisma)
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Frontend (React)                      │
+│              http://localhost:5173                       │
+│  ┌──────────┬──────────┬──────────┬──────────────────┐  │
+│  │  Home    │ Product  │  Cart    │  AI Search       │  │
+│  │  Page    │ Detail   │ Drawer   │  Component       │  │
+│  └──────────┴──────────┴──────────┴──────────────────┘  │
+└─────────────────────┬───────────────────────────────────┘
+                      │ HTTP/REST API
+                      ↓
+┌─────────────────────────────────────────────────────────┐
+│              Backend API (Node.js + Express)             │
+│              http://localhost:3000                       │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  REST API        │  GraphQL      │  AI Services  │   │
+│  │  /api/*          │  /graphql     │  NLP Parser   │   │
+│  │                  │               │  TF-IDF       │   │
+│  └──────────────────────────────────────────────────┘   │
+└─────────────────────┬───────────────────────────────────┘
+                      │ Prisma ORM
+                      ↓
+┌─────────────────────────────────────────────────────────┐
+│           PostgreSQL Database (Docker)                   │
+│              Port 5433                                   │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  Users │ Products │ Orders │ Cart │ Behaviors   │   │
+│  └──────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🚀 Quick Start
+
+### Option 1: Full Stack with Docker (Recommended)
+
+```bash
+# Clone repository
+git clone https://github.com/your-username/ecommerce-mini.git
+cd ecommerce-mini
+
+# Start PostgreSQL
+cd backend
+docker run --name ecommerce-postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=ecommerce \
+  -p 5433:5432 -d postgres:16-alpine
+
+# Setup backend
+npm install
+cp .env.example .env
+npm run db:generate
+npm run db:push
+npm run db:seed
+npm run dev  # Backend starts on port 3000
+
+# In new terminal - Setup frontend
+cd ..
+npm install
+npm run dev  # Frontend starts on port 5173
+```
+
+**Access:**
+- 🌐 Frontend: http://localhost:5173
+- 🔌 REST API: http://localhost:3000/api
+- 🔮 GraphQL: http://localhost:3000/graphql
+
+### Option 2: Docker Compose (One Command)
+
+```bash
+cd backend
+docker-compose up -d
+```
+
+---
+
+## 📡 API Documentation
+
+### REST Endpoints
+
+**Authentication**
+```http
+POST   /api/auth/register    # Register new user
+POST   /api/auth/login       # Login (get JWT token)
+GET    /api/auth/me          # Get current user
+```
+
+**Products**
+```http
+GET    /api/products                  # List products (with filters)
+GET    /api/products/:id              # Get by ID
+GET    /api/products/slug/:slug       # Get by slug
+```
+
+**Cart** (Requires Authentication)
+```http
+GET    /api/cart              # Get user's cart
+POST   /api/cart              # Add item
+PUT    /api/cart/:itemId      # Update quantity
+DELETE /api/cart/:itemId      # Remove item
+```
+
+**Orders** (Requires Authentication)
+```http
+POST   /api/orders            # Create order
+GET    /api/orders            # Get user's orders
+GET    /api/orders/:id        # Get order details
+```
+
+**AI Features**
+```http
+POST   /api/ai/search                # Natural language search
+GET    /api/ai/recommend/:productId  # Similar products
+GET    /api/ai/recommend/user        # Personalized (auth)
+GET    /api/ai/popular               # Trending products
+```
+
+### GraphQL API
+
+Endpoint: `/graphql`
+
+**Sample Query:**
+```graphql
+query {
+  products(limit: 10) {
+    products {
+      id
+      title
+      price
+      rating
+      tags
+    }
+    pagination {
+      total
+      totalPages
+    }
+  }
+}
+```
+
+---
+
+## 🧪 Demo Accounts
+
+After running `npm run db:seed`:
+
+**Email:** `demo@example.com`
+**Password:** `demo123`
+
+**Email:** `admin@example.com`
+**Password:** `demo123`
 
 ---
 
 ## 📁 Project Structure
 
-```text
-src/
- ├── components/
- │    ├── Navbar.tsx
- │    ├── AISearchBar.tsx
- │    ├── ProductCard.tsx
- │    ├── CartDrawer.tsx
- │    └── Filters.tsx
- │
- ├── pages/
- │    ├── Home.tsx
- │    └── ProductDetail.tsx
- │
- ├── store/
- │    └── cart.tsx
- │
- ├── lib/
- │    └── ai.ts
- │
- ├── mocks/
- │    └── products.ts
- │
- ├── App.tsx
- └── main.tsx
 ```
+ecommerce-mini/
+├── frontend/
+│   ├── src/
+│   │   ├── components/         # Reusable UI components
+│   │   ├── pages/             # Route pages
+│   │   ├── services/          # API integration
+│   │   ├── config/            # Configuration
+│   │   ├── store/             # State management
+│   │   └── types/             # TypeScript types
+│   └── package.json
+│
+├── backend/
+│   ├── src/
+│   │   ├── config/            # Database, env config
+│   │   ├── controllers/       # Request handlers
+│   │   ├── services/          # Business logic
+│   │   ├── routes/            # REST routes
+│   │   ├── graphql/           # GraphQL schema & resolvers
+│   │   ├── middleware/        # Auth, validation, errors
+│   │   ├── utils/             # Helpers (logger, similarity)
+│   │   └── prisma/            # Database schema & seed
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   ├── .github/workflows/     # CI/CD pipeline
+│   └── README.md              # Backend docs
+│
+└── README.md                  # This file
+```
+
 ---
 
-## 💡 Planned Extensions (Next Phase)
+## 🤖 AI Features Explained
 
-- **Backend API** — Node.js (Fastify) + Prisma + PostgreSQL  
-- **User Auth & Orders** — JWT login, checkout pipeline  
-- **AI Assistant API** — OpenAI query interpretation + recommendations  
-- **Deployment** — Frontend on Vercel, Backend on Railway  
+### 1. Natural Language Search
+```javascript
+// User input
+"wireless headphones under 100"
+
+// Parsed to
+{
+  keywords: ["wireless", "headphones"],
+  maxPrice: 100,
+  sortBy: "relevance"
+}
+
+// Backend executes smart search with scoring
+relevance × 0.5 + rating × 0.3 + popularity × 0.2
+```
+
+### 2. Content-Based Recommendations (TF-IDF)
+- Analyzes product titles and tags
+- Calculates term frequency-inverse document frequency
+- Uses cosine similarity for matching
+
+### 3. Collaborative Filtering
+- Tracks user behavior (VIEW, ADD_TO_CART, PURCHASE)
+- Recommends based on similar user preferences
+- No external AI APIs required
 
 ---
 
-## 🖥️ How to Run Locally
+## 🛡️ Security Features
+
+✅ **Password Hashing:** bcrypt (10 rounds)
+✅ **JWT Authentication:** Secure token-based auth
+✅ **HTTP Security Headers:** helmet.js
+✅ **Rate Limiting:** 100 requests per 15 minutes
+✅ **CORS Protection:** Configurable origins
+✅ **Input Validation:** Zod schema validation
+✅ **SQL Injection Prevention:** Prisma ORM
+
+---
+
+## 🚢 Deployment
+
+### Backend Deployment (AWS/Railway/Render)
+
+1. **Setup PostgreSQL database** (AWS RDS, Railway, etc.)
+2. **Set environment variables:**
+   ```bash
+   DATABASE_URL=postgresql://user:pass@host:5432/db
+   JWT_SECRET=your-secret-key-min-32-chars
+   NODE_ENV=production
+   ```
+3. **Deploy:**
+   ```bash
+   npm run build
+   npm start
+   ```
+
+### Frontend Deployment (Vercel/Netlify)
+
+1. **Update API URLs** in `.env`:
+   ```bash
+   VITE_API_URL=https://your-backend.com/api
+   ```
+2. **Deploy:**
+   ```bash
+   npm run build
+   # Upload dist/ folder
+   ```
+
+### Docker Deployment
 
 ```bash
-git clone https://github.com/<your-username>/ecommerce-mini.git
-cd ecommerce-mini
-npm install
-npm run dev
+docker-compose up -d
+```
 
+---
 
-Visit http://localhost:5173
- 🚀
+## 🎯 Technical Highlights
 
-✨ Author
-Kimberly Su
-Senior Frontend / Full-Stack Engineer
+This project demonstrates:
+
+✅ **Full-Stack TypeScript** - End-to-end type safety
+✅ **RESTful + GraphQL** - Dual API architecture
+✅ **Database Design** - Normalized schema with Prisma
+✅ **Authentication & Authorization** - JWT implementation
+✅ **AI/ML Algorithms** - TF-IDF, collaborative filtering
+✅ **Docker Containerization** - Production-ready setup
+✅ **CI/CD Pipeline** - Automated testing & deployment
+✅ **Security Best Practices** - Industry-standard measures
+✅ **Clean Architecture** - Separation of concerns
+✅ **Performance Optimization** - Caching, indexing
+
+---
+
+## 📚 Documentation
+
+- **Backend API Docs:** [backend/README.md](./backend/README.md)
+- **Quick Start Guide:** [backend/QUICKSTART.md](./backend/QUICKSTART.md)
+- **Architecture Plan:** [backend/plan.md](./backend/plan.md)
+- **Future Features:** [backend/bonus.md](./backend/bonus.md)
+
+---
+
+## 🔮 Future Enhancements
+
+See [backend/bonus.md](./backend/bonus.md) for planned features:
+- OpenAI GPT-4 integration
+- Redis caching layer
+- Elasticsearch full-text search
+- Stripe payment gateway
+- WebSocket real-time updates
+- Admin dashboard
+- Email notifications
+
+---
+
+## 👩‍💻 Author
+
+**Kimberly Su**
+Senior Full-Stack Engineer
 14+ years experience in Game Dev, 3D/VR/AR & Web Engineering
+
+📧 Contact: [Your Email]
+🔗 LinkedIn: [Your LinkedIn]
+💼 Portfolio: [Your Portfolio]
+
+---
+
+## 📄 License
+
+MIT License - Feel free to use this project for learning or portfolio purposes!
+
+---
+
+## 🙏 Acknowledgments
+
+Built to showcase:
+- Modern full-stack development practices
+- TypeScript proficiency across frontend and backend
+- Database design and ORM usage
+- RESTful and GraphQL API design
+- AI/ML algorithm implementation (without paid services)
+- DevOps and containerization skills
+- Security best practices
+- Clean code architecture
+
+---
+
+**⭐ Star this repo if you find it helpful!**
+
+**🚀 Happy Coding!**
