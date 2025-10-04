@@ -1,65 +1,128 @@
-import { createContext, useContext, useEffect, useMemo, useReducer } from "react";
+// src/store/cart.tsx
+// Cart context with quantity accumulation, decrement, remove, and clear.
+// Persistent via localStorage. All comments in English.
+
+import React, { createContext, useContext, useEffect, useMemo, useReducer } from "react";
 import type { Product } from "../mocks/products";
 
-type CartItem = { id: string; title: string; price: number; qty: number; image?: string };
-type State = { items: CartItem[] };
-type Action =
-  | { type: "add"; product: Product }
-  | { type: "inc"; id: string }
-  | { type: "dec"; id: string }
-  | { type: "remove"; id: string }
-  | { type: "set"; state: State };
+export type CartItem = { product: Product; quantity: number };
+export type CartState = { items: CartItem[] };
 
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case "set": return action.state;
-    case "add": {
-      const idx = state.items.findIndex(i => i.id === action.product.id);
-      if (idx >= 0) {
-        const items = [...state.items];
-        items[idx] = { ...items[idx], qty: items[idx].qty + 1 };
+type AddAction = { type: "add"; product: Product; delta?: number };
+type RemoveAction = { type: "remove"; productId?: string; id?: string };
+type DecrementAction = { type: "decrement"; productId: string; by?: number };
+type SetQtyAction = { type: "setQuantity"; productId: string; quantity: number };
+type ClearAction = { type: "clear" };
+
+type CartAction = AddAction | RemoveAction | DecrementAction | SetQtyAction | ClearAction;
+
+const STORAGE_KEY = "mini-shop:cart";
+
+function loadInitialState(): CartState {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed?.items)) {
+        // sanitize items
+        const items = parsed.items
+          .map((it: any) => {
+            if (!it || !it.product) return null;
+            const qty = Number(it.quantity ?? 1);
+            const quantity = Number.isFinite(qty) && qty > 0 ? qty : 1;
+            return { product: it.product as Product, quantity } as CartItem;
+          })
+          .filter(Boolean) as CartItem[];
         return { items };
       }
-      return {
-        items: [...state.items, {
-          id: action.product.id,
-          title: action.product.title,
-          price: action.product.price,
-          image: action.product.image,
-          qty: 1
-        }]
-      };
     }
-    case "inc": return { items: state.items.map(i => i.id === action.id ? { ...i, qty: i.qty + 1 } : i) };
-    case "dec": return { items: state.items.map(i => i.id === action.id ? { ...i, qty: Math.max(1, i.qty - 1) } : i) };
-    case "remove": return { items: state.items.filter(i => i.id !== action.id) };
-    default: return state;
+  } catch {}
+  return { items: [] };
+}
+
+function saveState(state: CartState) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {}
+}
+
+function cartReducer(state: CartState, action: CartAction): CartState {
+  switch (action.type) {
+    case "add": {
+      const delta = Number(action.delta ?? 1);
+      const by = Number.isFinite(delta) && delta > 0 ? delta : 1;
+      const id = action.product.id;
+
+      const idx = state.items.findIndex((it) => it.product.id === id);
+      if (idx >= 0) {
+        // accumulate quantity
+        const next = [...state.items];
+        next[idx] = { ...next[idx], quantity: next[idx].quantity + by };
+        return { items: next };
+      }
+      return { items: [...state.items, { product: action.product, quantity: by }] };
+    }
+
+    case "decrement": {
+      const by = Number(action.by ?? 1);
+      const id = action.productId;
+      if (!id) return state;
+      const idx = state.items.findIndex((it) => it.product.id === id);
+      if (idx < 0) return state;
+
+      const nextQty = state.items[idx].quantity - (Number.isFinite(by) && by > 0 ? by : 1);
+      if (nextQty <= 0) {
+        // remove if goes to zero
+        const next = state.items.filter((it) => it.product.id !== id);
+        return { items: next };
+      }
+      const next = [...state.items];
+      next[idx] = { ...next[idx], quantity: nextQty };
+      return { items: next };
+    }
+
+    case "setQuantity": {
+      const { productId, quantity } = action;
+      if (!productId) return state;
+      const q = Math.max(0, Math.floor(quantity));
+      const idx = state.items.findIndex((it) => it.product.id === productId);
+      if (idx < 0) return state;
+      if (q === 0) {
+        return { items: state.items.filter((it) => it.product.id !== productId) };
+      }
+      const next = [...state.items];
+      next[idx] = { ...next[idx], quantity: q };
+      return { items: next };
+    }
+
+    case "remove": {
+      const id = action.productId ?? action.id;
+      if (!id) return state;
+      return { items: state.items.filter((it) => it.product.id !== String(id)) };
+    }
+
+    case "clear":
+      return { items: [] };
+
+    default:
+      return state;
   }
 }
 
 const CartCtx = createContext<{
-  state: State; dispatch: React.Dispatch<Action>; count: number; total: number;
+  state: CartState;
+  dispatch: React.Dispatch<CartAction>;
 } | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, { items: [] });
+  const [state, dispatch] = useReducer(cartReducer, undefined as unknown as CartState, loadInitialState);
 
-  // 读写 localStorage 实现前端持久化
+  // persist on change
   useEffect(() => {
-    const raw = localStorage.getItem("mini.cart");
-    if (raw) {
-      try { dispatch({ type: "set", state: JSON.parse(raw) }); } catch {}
-    }
-  }, []);
-  useEffect(() => {
-    localStorage.setItem("mini.cart", JSON.stringify(state));
+    saveState(state);
   }, [state]);
 
-  const value = useMemo(() => {
-    const count = state.items.reduce((a,b)=>a+b.qty,0);
-    const total = state.items.reduce((a,b)=>a+b.price*b.qty,0);
-    return { state, dispatch, count, total };
-  }, [state]);
+  const value = useMemo(() => ({ state, dispatch }), [state]);
 
   return <CartCtx.Provider value={value}>{children}</CartCtx.Provider>;
 }
