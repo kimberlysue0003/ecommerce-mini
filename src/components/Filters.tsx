@@ -39,8 +39,8 @@ export default function Filters({ onApply }: Props) {
   };
 
   return (
-    <div className="space-y-3">
-      <div className="font-semibold">Price</div>
+    <div className="space-y-3 bg-white p-4 rounded-lg border lg:border-0 lg:bg-transparent lg:p-0">
+      <div className="font-semibold text-sm lg:text-base">Price Filter</div>
 
       <div className="flex items-center gap-2">
         <input
@@ -48,25 +48,25 @@ export default function Filters({ onApply }: Props) {
           type="number"
           inputMode="numeric"
           placeholder="Min"
-          className="w-24 rounded border px-2 py-1"
+          className="flex-1 lg:w-24 lg:flex-none rounded border px-3 py-2 text-sm"
           onKeyDown={onKeyDown}
         />
-        <span>—</span>
+        <span className="text-gray-400">—</span>
         <input
           ref={maxRef}
           type="number"
           inputMode="numeric"
           placeholder="Max"
-          className="w-24 rounded border px-2 py-1"
+          className="flex-1 lg:w-24 lg:flex-none rounded border px-3 py-2 text-sm"
           onKeyDown={onKeyDown}
         />
       </div>
 
       <div className="flex gap-2">
-        <button onClick={apply} className="rounded-md border px-3 py-1">
+        <button onClick={apply} className="flex-1 lg:flex-none rounded-md bg-black text-white px-4 py-2 text-sm font-medium hover:bg-gray-800">
           Apply
         </button>
-        <button onClick={clear} className="rounded-md px-3 py-1 text-gray-600 hover:bg-gray-100">
+        <button onClick={clear} className="flex-1 lg:flex-none rounded-md border px-4 py-2 text-sm text-gray-600 hover:bg-gray-50">
           Clear
         </button>
       </div>

@@ -45,12 +45,21 @@ export default function Home() {
   }, [q, priceMin, priceMax]);
 
   return (
-    <div className="grid grid-cols-12 gap-6">
-      <aside className="col-span-3">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
+      {/* Sidebar - Hidden on mobile, shown on desktop */}
+      <aside className="hidden lg:block lg:col-span-3">
         <Filters onApply={(min,max)=>{ setPriceMin(min); setPriceMax(max); }} />
       </aside>
-      <section className="col-span-9 space-y-4">
+
+      {/* Main content */}
+      <section className="lg:col-span-9 space-y-4">
         <AISearchBar onSearch={setQ} />
+
+        {/* Mobile filter - Show on small screens */}
+        <div className="lg:hidden">
+          <Filters onApply={(min,max)=>{ setPriceMin(min); setPriceMax(max); }} />
+        </div>
+
         <ActiveChips
           q={q}
           priceMin={priceMin}
@@ -62,16 +71,16 @@ export default function Home() {
           }}
         />
         {loading ? (
-          <div className="col-span-3 text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-gray-500">
             Loading products...
           </div>
         ) : (
-          <motion.div layout className="grid grid-cols-3 gap-6">
+          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             {products.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
             {products.length === 0 && (
-              <div className="col-span-3 text-gray-500">No results found.</div>
+              <div className="col-span-full text-center text-gray-500">No results found.</div>
             )}
           </motion.div>
         )}
