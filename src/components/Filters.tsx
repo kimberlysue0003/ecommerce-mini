@@ -42,22 +42,22 @@ export default function Filters({ onApply }: Props) {
     <div className="space-y-3 bg-white p-4 rounded-lg border lg:border-0 lg:bg-transparent lg:p-0">
       <div className="font-semibold text-sm lg:text-base">Price Filter</div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 min-w-0">
         <input
           ref={minRef}
           type="number"
           inputMode="numeric"
           placeholder="Min"
-          className="flex-1 lg:w-24 lg:flex-none rounded border px-3 py-2 text-sm"
+          className="flex-1 min-w-0 lg:w-24 lg:flex-none rounded border px-3 py-2 text-sm"
           onKeyDown={onKeyDown}
         />
-        <span className="text-gray-400">—</span>
+        <span className="text-gray-400 flex-shrink-0">—</span>
         <input
           ref={maxRef}
           type="number"
           inputMode="numeric"
           placeholder="Max"
-          className="flex-1 lg:w-24 lg:flex-none rounded border px-3 py-2 text-sm"
+          className="flex-1 min-w-0 lg:w-24 lg:flex-none rounded border px-3 py-2 text-sm"
           onKeyDown={onKeyDown}
         />
       </div>
