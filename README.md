@@ -1,5 +1,24 @@
 # 🛍️ E-commerce Full-Stack Production Demo
 
+![Status](https://img.shields.io/badge/status-production-success)
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fwww.quickshop.fit&up_message=online&down_message=offline)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Last Commit](https://img.shields.io/github/last-commit/kimberlysue0003/ecommerce-mini)
+
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?logo=tailwind-css&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-20-339933?logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4-000000?logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma&logoColor=white)
+
+![AWS EC2](https://img.shields.io/badge/AWS-EC2-FF9900?logo=amazon-aws&logoColor=white)
+![AWS RDS](https://img.shields.io/badge/AWS-RDS-527FFF?logo=amazon-rds&logoColor=white)
+![AWS Amplify](https://img.shields.io/badge/AWS-Amplify-FF9900?logo=aws-amplify&logoColor=white)
+![Stripe](https://img.shields.io/badge/Stripe-Integrated-008CDD?logo=stripe&logoColor=white)
+
 A **production-deployed** Full-Stack E-commerce Application built by **Kimberly Su**, showcasing enterprise-grade web development with **React 19 + TypeScript**, **Node.js + PostgreSQL**, **Stripe Payment Integration**, **AI-powered search**, and complete **AWS cloud deployment**.
 
 **🌐 Live Demo:** [https://www.quickshop.fit](https://www.quickshop.fit)
