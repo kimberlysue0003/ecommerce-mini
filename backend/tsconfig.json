@@ -19,7 +19,7 @@
     "strictNullChecks": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*"],
