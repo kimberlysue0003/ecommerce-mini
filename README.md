@@ -5,6 +5,9 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Last Commit](https://img.shields.io/github/last-commit/kimberlysue0003/ecommerce-mini)
 
+![Frontend CI](https://github.com/kimberlysue0003/ecommerce-mini/actions/workflows/frontend-ci.yml/badge.svg)
+![Backend CI](https://github.com/kimberlysue0003/ecommerce-mini/actions/workflows/backend-ci.yml/badge.svg)
+
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)
