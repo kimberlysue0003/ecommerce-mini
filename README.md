@@ -33,38 +33,32 @@ A **production-deployed** Full-Stack E-commerce Application built by **Kimberly 
 ## 🚀 Tech Stack
 
 ### Frontend
-- **React 19** + **TypeScript 5.7** + **Vite**
-- **TailwindCSS 4** + **Framer Motion** (UI + animations)
-- **React Router v7**
-- **TanStack Query** (API data fetching)
+- React 19 + TypeScript 5.7 + Vite
+- TailwindCSS 4 + Framer Motion
+- React Router v7
+- TanStack Query
 
 ### Backend
-- **Node.js 20** + **TypeScript 5.7**
-- **Express.js** (REST API)
-- **GraphQL** (graphql-yoga)
-- **PostgreSQL 16** + **Prisma ORM**
-- **JWT Authentication** (jsonwebtoken)
-- **Security:** helmet, CORS, rate-limiting
+- Node.js 20 + TypeScript 5.7
+- Express.js (REST API)
+- GraphQL (graphql-yoga)
+- PostgreSQL 16 + Prisma ORM
+- JWT Authentication
 
 ### AI Features (Free - No External APIs)
-- **Rule-based NLP** query parsing
-- **TF-IDF** content-based similarity
-- **Collaborative Filtering** recommendations
-- **User Behavior Tracking**
+- Rule-based NLP query parsing
+- TF-IDF content-based similarity
+- Collaborative Filtering recommendations
+- User Behavior Tracking
 
-### Payment & Business Logic
-- **Stripe Payment Gateway** (Test & Production modes)
-- **Order Management System**
-- **Transaction Processing**
+### Payment Integration
+- Stripe Payment Gateway (Test & Production)
 
-### Cloud & DevOps (AWS Production Deployment)
-- **AWS EC2** - Backend API hosting with PM2
-- **AWS RDS** - PostgreSQL managed database
-- **AWS Amplify** - Frontend hosting with CI/CD
-- **Nginx** - Reverse proxy with SSL termination
-- **Let's Encrypt** - Free SSL/TLS certificates
-- **Custom Domain** - quickshop.fit with HTTPS
-- **Docker** + **Docker Compose** - Local development
+### Cloud & DevOps
+- AWS EC2 + RDS + Amplify
+- Nginx + PM2 + Let's Encrypt SSL
+- Docker + Docker Compose
+- GitHub Actions CI/CD
 
 ---
 
@@ -436,16 +430,11 @@ This project demonstrates:
 
 ## 🔮 Future Enhancements
 
-See [backend/bonus.md](./backend/bonus.md) for planned features:
-- ✅ ~~Stripe payment gateway~~ **[IMPLEMENTED]**
-- ✅ ~~AWS production deployment~~ **[IMPLEMENTED]**
-- OpenAI GPT-4 integration for advanced search
-- Redis caching layer for performance
-- Elasticsearch full-text search
-- WebSocket real-time updates
 - Admin dashboard with analytics
 - Email notifications (order confirmations)
 - Product image uploads (S3 integration)
+- Redis caching layer
+- Advanced product reviews and ratings
 
 ---
 
