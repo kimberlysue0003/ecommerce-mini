@@ -14,7 +14,7 @@ export function errorHandler(
   error: Error,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) {
   // Log error
   logger.error('Request error:', {
@@ -96,6 +96,6 @@ function handleZodError(error: ZodError, res: Response) {
 /**
  * 404 handler for undefined routes
  */
-export function notFoundHandler(req: Request, res: Response) {
+export function notFoundHandler(_req: Request, res: Response) {
   return ApiResponseHelper.notFound(res, 'Route');
 }

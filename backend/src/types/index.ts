@@ -2,7 +2,6 @@
 // All comments in English per project requirements
 
 import { Request } from 'express';
-import { User } from '@prisma/client';
 
 // Extend Express Request to include authenticated user
 export interface AuthRequest extends Request {

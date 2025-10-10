@@ -20,6 +20,7 @@ import aiRoutes from './routes/ai.js';
 import paymentRoutes from './routes/payment.routes.js';
 
 // Import GraphQL
+import { createSchema } from 'graphql-yoga';
 import { typeDefs } from './graphql/schema.js';
 import { resolvers } from './graphql/resolvers/index.js';
 import { createContext } from './graphql/context.js';
@@ -58,7 +59,7 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
@@ -75,9 +76,13 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/payment', paymentRoutes);
 
 // GraphQL endpoint
-const yoga = createYoga({
+const schema = createSchema({
   typeDefs,
   resolvers,
+});
+
+const yoga = createYoga({
+  schema,
   context: async ({ request }) => {
     return createContext(request as any);
   },

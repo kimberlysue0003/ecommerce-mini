@@ -30,7 +30,7 @@ async function main() {
     },
   });
 
-  const adminUser = await prisma.user.create({
+  await prisma.user.create({
     data: {
       email: 'admin@example.com',
       password: hashedPassword,
@@ -41,7 +41,7 @@ async function main() {
   console.log('✅ Created demo users');
 
   // Create products matching frontend mock data
-  const products = await prisma.product.createMany({
+  await prisma.product.createMany({
     data: [
       // Headphones / Audio
       {
@@ -264,7 +264,7 @@ async function main() {
   const orderProducts = await prisma.product.findMany({ take: 2 });
   const orderTotal = orderProducts.reduce((sum, p) => sum + p.price, 0);
 
-  const demoOrder = await prisma.order.create({
+  await prisma.order.create({
     data: {
       userId: demoUser.id,
       total: orderTotal,

@@ -2,7 +2,6 @@
 // Rule-based NLP search + collaborative filtering recommendations
 
 import { prisma } from '../config/database.js';
-import { Product } from '@prisma/client';
 import { AISearchQuery } from '../types/index.js';
 import { findSimilarProducts, calculateQuerySimilarity } from '../utils/similarity.js';
 

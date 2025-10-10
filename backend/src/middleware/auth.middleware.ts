@@ -40,7 +40,7 @@ export function authenticate(req: AuthRequest, res: Response, next: NextFunction
  * Optional authentication middleware
  * Attaches user if token is present, but doesn't fail if not
  */
-export function optionalAuth(req: AuthRequest, res: Response, next: NextFunction) {
+export function optionalAuth(req: AuthRequest, _res: Response, next: NextFunction) {
   try {
     const authHeader = req.headers.authorization;
 

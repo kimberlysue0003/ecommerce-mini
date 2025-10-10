@@ -2,7 +2,7 @@
 // Handles user registration, login, and JWT token generation
 
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { prisma } from '../config/database.js';
 import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/env.js';
 import { AuthPayload, JWTPayload } from '../types/index.js';
@@ -102,7 +102,7 @@ export class AuthService {
   static generateToken(payload: JWTPayload): string {
     return jwt.sign(payload, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
-    });
+    } as SignOptions);
   }
 
   /**
