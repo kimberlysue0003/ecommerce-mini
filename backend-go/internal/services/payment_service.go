@@ -245,6 +245,58 @@ func (s *PaymentService) GetPublishableKey() (string, error) {
 	return config.AppConfig.StripePublishableKey, nil
 }
 
+// SyncCartItems syncs frontend cart items to backend database
+// Matches Node.js backend behavior: clears existing cart, validates products, adds valid items
+func (s *PaymentService) SyncCartItems(userID string, items []struct {
+	ProductID string `json:"productId"`
+	Quantity  int    `json:"quantity"`
+}) error {
+	// Validate and filter only valid productIds
+	productIds := make([]string, len(items))
+	for i, item := range items {
+		productIds[i] = item.ProductID
+	}
+
+	var validProducts []models.Product
+	err := s.db.Where("id IN ?", productIds).Find(&validProducts).Error
+	if err != nil {
+		return err
+	}
+
+	if len(validProducts) == 0 {
+		return errors.New("no valid products in cart")
+	}
+
+	// Create set of valid product IDs
+	validProductIds := make(map[string]bool)
+	for _, p := range validProducts {
+		validProductIds[p.ID] = true
+	}
+
+	// Clear existing cart
+	err = s.db.Where(`"userId" = ?`, userID).Delete(&models.CartItem{}).Error
+	if err != nil {
+		return err
+	}
+
+	// Add only valid items
+	for _, item := range items {
+		if validProductIds[item.ProductID] {
+			cartItem := models.CartItem{
+				ID:        utils.GenerateID(),
+				UserID:    userID,
+				ProductID: item.ProductID,
+				Quantity:  item.Quantity,
+			}
+			if err := s.db.Create(&cartItem).Error; err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
 // GetPaymentService returns a global payment service instance
 func GetPaymentService() *PaymentService {
 	return NewPaymentService(config.DB)

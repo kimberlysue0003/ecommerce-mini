@@ -20,7 +20,7 @@ func NewPaymentHandler(paymentService *services.PaymentService) *PaymentHandler 
 
 // CreatePaymentIntent handles creating payment intent from cart
 // POST /api/payment/create-payment-intent
-// Compatible with Node.js backend - creates order from cart with payment
+// Compatible with Node.js backend - syncs items to cart, then creates order with payment
 func (h *PaymentHandler) CreatePaymentIntent(c *gin.Context) {
 	// Get user ID from context
 	userID, exists := c.Get("userID")
@@ -29,7 +29,7 @@ func (h *PaymentHandler) CreatePaymentIntent(c *gin.Context) {
 		return
 	}
 
-	// Parse request body (items are optional, ignored for now)
+	// Parse request body (items are optional)
 	var req struct {
 		Items []struct {
 			ProductID string `json:"productId"`
@@ -38,6 +38,15 @@ func (h *PaymentHandler) CreatePaymentIntent(c *gin.Context) {
 	}
 	// Ignore binding errors since items is optional
 	c.ShouldBindJSON(&req)
+
+	// If items provided, sync to backend cart first (Node.js behavior)
+	if len(req.Items) > 0 {
+		err := h.paymentService.SyncCartItems(userID.(string), req.Items)
+		if err != nil {
+			utils.RespondInternalError(c, err, "Failed to sync cart items")
+			return
+		}
+	}
 
 	// Create order from cart with payment (same as Node.js backend)
 	result, err := h.paymentService.CreateOrderWithPayment(userID.(string))
