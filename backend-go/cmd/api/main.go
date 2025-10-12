@@ -149,14 +149,17 @@ func setupRoutes(router *gin.Engine) {
 			orders.GET("/:id", orderHandler.GetOrderByID)
 		}
 
-		// Payment routes (require authentication)
+		// Payment routes
 		payment := api.Group("/payment")
-		payment.Use(middleware.AuthMiddleware())
 		{
-			payment.POST("/create-payment-intent", paymentHandler.CreatePaymentIntent)
-			payment.POST("/create-order-with-payment", paymentHandler.CreateOrderWithPayment)
-			payment.POST("/confirm", paymentHandler.ConfirmPayment)
+			// Public route - no auth required (Node.js compatibility)
 			payment.GET("/config", paymentHandler.GetPublishableKey)
+
+			// Protected routes - require authentication
+			payment.POST("/create-payment-intent", middleware.AuthMiddleware(), paymentHandler.CreatePaymentIntent)
+			payment.POST("/create-order-with-payment", middleware.AuthMiddleware(), paymentHandler.CreateOrderWithPayment)
+			payment.POST("/confirm-payment", middleware.AuthMiddleware(), paymentHandler.ConfirmPayment) // Node.js compatible route
+			payment.POST("/confirm", middleware.AuthMiddleware(), paymentHandler.ConfirmPayment)         // Keep both for compatibility
 		}
 
 		// Placeholder endpoint

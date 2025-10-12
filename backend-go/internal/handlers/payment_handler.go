@@ -18,8 +18,9 @@ func NewPaymentHandler(paymentService *services.PaymentService) *PaymentHandler 
 	}
 }
 
-// CreatePaymentIntent handles creating a Stripe payment intent
+// CreatePaymentIntent handles creating payment intent from cart
 // POST /api/payment/create-payment-intent
+// Compatible with Node.js backend - creates order from cart with payment
 func (h *PaymentHandler) CreatePaymentIntent(c *gin.Context) {
 	// Get user ID from context
 	userID, exists := c.Get("userID")
@@ -28,25 +29,38 @@ func (h *PaymentHandler) CreatePaymentIntent(c *gin.Context) {
 		return
 	}
 
-	var req services.CreatePaymentIntentRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		utils.RespondBadRequest(c, err, "Invalid request body")
-		return
+	// Parse request body (items are optional, ignored for now)
+	var req struct {
+		Items []struct {
+			ProductID string `json:"productId"`
+			Quantity  int    `json:"quantity"`
+		} `json:"items"`
 	}
+	// Ignore binding errors since items is optional
+	c.ShouldBindJSON(&req)
 
-	// Call service
-	paymentIntent, err := h.paymentService.CreatePaymentIntent(userID.(string), req)
+	// Create order from cart with payment (same as Node.js backend)
+	result, err := h.paymentService.CreateOrderWithPayment(userID.(string))
 	if err != nil {
 		if err.Error() == "stripe is not configured" {
 			utils.RespondInternalError(c, err, "Payment service not configured")
+			return
+		}
+		if err.Error() == "cart is empty" {
+			utils.RespondBadRequest(c, err, "Cart is empty")
 			return
 		}
 		utils.RespondInternalError(c, err, "Failed to create payment intent")
 		return
 	}
 
-	// Return success
-	utils.RespondSuccess(c, paymentIntent)
+	// Return response compatible with Node.js backend format
+	c.JSON(200, gin.H{
+		"orderId":         result.Order.ID,
+		"clientSecret":    result.Payment.ClientSecret,
+		"paymentIntentId": result.Payment.PaymentIntentID,
+		"total":           result.Order.Total,
+	})
 }
 
 // CreateOrderWithPayment handles creating order from cart with payment
@@ -125,7 +139,8 @@ func (h *PaymentHandler) GetPublishableKey(c *gin.Context) {
 		return
 	}
 
-	utils.RespondSuccess(c, gin.H{
+	// Return response compatible with Node.js backend format (no wrapper)
+	c.JSON(200, gin.H{
 		"publishableKey": key,
 	})
 }
