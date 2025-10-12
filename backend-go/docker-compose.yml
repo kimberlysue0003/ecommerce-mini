@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database for Go backend testing
+  postgres:
+    image: postgres:16-alpine
+    container_name: ecommerce-go-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ecommerce
+    ports:
+      - "5434:5432"  # Different port to avoid conflict with Node.js Docker
+    volumes:
+      - postgres_go_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Go Backend
+  backend-go:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecommerce-backend-go
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ecommerce?sslmode=disable
+      JWT_SECRET: ${JWT_SECRET}
+      GO_ENV: development
+      PORT: 3001
+      CORS_ORIGIN: http://localhost:5173
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/tmp
+
+volumes:
+  postgres_go_data:

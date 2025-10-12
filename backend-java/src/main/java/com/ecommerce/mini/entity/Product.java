@@ -2,6 +2,7 @@ package com.ecommerce.mini.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -19,6 +20,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Product {
 
     @Id
@@ -37,7 +39,7 @@ public class Product {
     private BigDecimal price;
 
     @Column(name = "image", length = 500)
-    private String image;
+    private String imageUrl;
 
     @Column(name = "category", length = 100)
     private String category;
@@ -54,10 +56,10 @@ public class Product {
     @Column(name = "tags", columnDefinition = "TEXT[]")
     private String[] tags;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "\"createdAt\"", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "\"updatedAt\"", nullable = false)
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
