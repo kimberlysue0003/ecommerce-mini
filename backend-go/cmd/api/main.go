@@ -88,9 +88,11 @@ func setupMiddleware(router *gin.Engine, cfg *config.Config) {
 func setupRoutes(router *gin.Engine) {
 	// Initialize services
 	authService := services.GetAuthService()
+	productService := services.GetProductService()
 
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(authService)
+	productHandler := handlers.NewProductHandler(productService)
 
 	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
@@ -113,9 +115,13 @@ func setupRoutes(router *gin.Engine) {
 			auth.GET("/me", middleware.AuthMiddleware(), authHandler.GetMe)
 		}
 
-		// TODO: Add product routes
-		// api.GET("/products", productHandler.List)
-		// api.GET("/products/:id", productHandler.GetByID)
+		// Product routes
+		products := api.Group("/products")
+		{
+			products.GET("", productHandler.List)
+			products.GET("/:id", productHandler.GetByID)
+			products.GET("/slug/:slug", productHandler.GetBySlug)
+		}
 
 		// Placeholder endpoint
 		api.GET("/status", func(c *gin.Context) {
