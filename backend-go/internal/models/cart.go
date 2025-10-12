@@ -6,12 +6,12 @@ import (
 
 // CartItem represents an item in a user's shopping cart
 type CartItem struct {
-	ID        string    `gorm:"primaryKey;type:varchar(30)" json:"id"`
-	UserID    string    `gorm:"not null;index" json:"userId"`
-	ProductID string    `gorm:"not null;index" json:"productId"`
-	Quantity  int       `gorm:"default:1" json:"quantity" binding:"required,min=1"`
-	CreatedAt time.Time `gorm:"autoCreateTime" json:"createdAt"`
-	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updatedAt"`
+	ID        string    `gorm:"primaryKey;type:varchar(30);column:id" json:"id"`
+	UserID    string    `gorm:"not null;index;column:userId" json:"userId"`
+	ProductID string    `gorm:"not null;index;column:productId" json:"productId"`
+	Quantity  int       `gorm:"default:1;column:quantity" json:"quantity" binding:"required,min=1"`
+	CreatedAt time.Time `gorm:"autoCreateTime;column:createdAt" json:"createdAt"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime;column:updatedAt" json:"updatedAt"`
 
 	// Relations
 	User    User    `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE" json:"user,omitempty"`
