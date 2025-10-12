@@ -92,6 +92,7 @@ func setupRoutes(router *gin.Engine) {
 	cartService := services.GetCartService()
 	orderService := services.GetOrderService()
 	paymentService := services.GetPaymentService()
+	aiService := services.GetAIService()
 
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(authService)
@@ -99,6 +100,7 @@ func setupRoutes(router *gin.Engine) {
 	cartHandler := handlers.NewCartHandler(cartService)
 	orderHandler := handlers.NewOrderHandler(orderService)
 	paymentHandler := handlers.NewPaymentHandler(paymentService)
+	aiHandler := handlers.NewAIHandler(aiService)
 
 	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
@@ -160,6 +162,14 @@ func setupRoutes(router *gin.Engine) {
 			payment.POST("/create-order-with-payment", middleware.AuthMiddleware(), paymentHandler.CreateOrderWithPayment)
 			payment.POST("/confirm-payment", middleware.AuthMiddleware(), paymentHandler.ConfirmPayment) // Node.js compatible route
 			payment.POST("/confirm", middleware.AuthMiddleware(), paymentHandler.ConfirmPayment)         // Keep both for compatibility
+		}
+
+		// AI routes
+		ai := api.Group("/ai")
+		{
+			ai.POST("/search", aiHandler.Search)
+			ai.GET("/recommend/:productId", aiHandler.GetSimilarProducts)
+			ai.GET("/popular", aiHandler.GetPopularProducts)
 		}
 
 		// Placeholder endpoint
