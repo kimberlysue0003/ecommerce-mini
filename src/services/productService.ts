@@ -3,6 +3,29 @@
 import { fetchAPI } from '../config/api';
 import type { Product } from '../types';
 
+function unwrapData<T>(response: unknown): T {
+  if (response && typeof response === 'object' && 'data' in response) {
+    return (response as { data: T }).data;
+  }
+  return response as T;
+}
+
+function unwrapResults<T>(response: unknown): T {
+  if (response && typeof response === 'object') {
+    const resultObject = response as { results?: T; data?: unknown };
+
+    if (Array.isArray(resultObject.results) || resultObject.results) {
+      return resultObject.results as T;
+    }
+
+    if (resultObject.data && typeof resultObject.data === 'object' && 'results' in (resultObject.data as Record<string, unknown>)) {
+      return (resultObject.data as { results: T }).results;
+    }
+  }
+
+  return response as T;
+}
+
 export async function getProducts(params?: {
   search?: string;
   tags?: string;
@@ -24,17 +47,17 @@ export async function getProducts(params?: {
   const endpoint = `/products${query ? `?${query}` : ''}`;
 
   const response = await fetchAPI(endpoint);
-  return response.data as Product[];
+  return unwrapData<Product[]>(response);
 }
 
 export async function getProductById(id: string) {
   const response = await fetchAPI(`/products/${id}`);
-  return response.data as Product;
+  return unwrapData<Product>(response);
 }
 
 export async function getProductBySlug(slug: string) {
   const response = await fetchAPI(`/products/slug/${slug}`);
-  return response.data as Product;
+  return unwrapData<Product>(response);
 }
 
 export async function aiSearchProducts(query: string) {
@@ -42,5 +65,5 @@ export async function aiSearchProducts(query: string) {
     method: 'POST',
     body: JSON.stringify({ query }),
   });
-  return response.data.results as Product[];
+  return unwrapResults<Product[]>(response);
 }

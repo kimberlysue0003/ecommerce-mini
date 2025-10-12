@@ -31,7 +31,7 @@ public class Order {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "\"userId\"", nullable = false)
     private User user;
 
     @Column(name = "total", nullable = false, precision = 10, scale = 2)
@@ -40,12 +40,6 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private OrderStatus status;
-
-    @Column(name = "stripe_payment_intent_id", length = 255)
-    private String stripePaymentIntentId;
-
-    @Column(name = "shipping_address", columnDefinition = "TEXT")
-    private String shippingAddress;
 
     @Column(name = "\"createdAt\"", nullable = false, updatable = false)
     private LocalDateTime createdAt;

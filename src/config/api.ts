@@ -3,8 +3,19 @@
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
 export const GRAPHQL_URL = import.meta.env.VITE_GRAPHQL_URL || 'http://localhost:3002/graphql';
 
+export class ApiError<T = unknown> extends Error {
+  constructor(
+    message: string,
+    public readonly status: number,
+    public readonly data?: T
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
 // API helper functions
-export async function fetchAPI(endpoint: string, options?: RequestInit) {
+export async function fetchAPI<T = unknown>(endpoint: string, options?: RequestInit): Promise<T | undefined> {
   const url = `${API_BASE_URL}${endpoint}`;
   const token = getAuthToken();
 
@@ -17,18 +28,44 @@ export async function fetchAPI(endpoint: string, options?: RequestInit) {
     },
   });
 
-  if (!response.ok) {
-    // Try to get error details from response body
+  const method = options?.method?.toUpperCase?.() ?? 'GET';
+  const hasBody =
+    method !== 'HEAD' &&
+    response.status !== 204 &&
+    response.status !== 205 &&
+    response.status !== 304;
+
+  let parsedBody: any = undefined;
+  if (hasBody) {
+    const contentType = response.headers.get('content-type') ?? '';
     try {
-      const errorData = await response.json();
-      const errorMessage = errorData.error || errorData.message || response.statusText;
-      throw new Error(`API error: ${errorMessage}`);
-    } catch (e) {
-      throw new Error(`API error: ${response.statusText}`);
+      if (contentType.includes('application/json')) {
+        const text = await response.text();
+        parsedBody = text ? JSON.parse(text) : undefined;
+      } else {
+        const text = await response.text();
+        parsedBody = text || undefined;
+      }
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.warn('Failed to parse response body', error);
+      }
+      parsedBody = undefined;
     }
   }
 
-  return response.json();
+  if (!response.ok) {
+    const errorMessage =
+      parsedBody?.error ||
+      parsedBody?.message ||
+      (typeof parsedBody === 'string' && parsedBody) ||
+      response.statusText ||
+      'Request failed';
+
+    throw new ApiError(`API error: ${errorMessage}`, response.status, parsedBody);
+  }
+
+  return parsedBody as T;
 }
 
 // Auth token management

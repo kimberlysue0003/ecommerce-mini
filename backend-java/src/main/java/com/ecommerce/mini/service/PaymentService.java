@@ -36,11 +36,6 @@ public class PaymentService {
             throw new RuntimeException("Unauthorized access to order");
         }
 
-        // Check if order already has a payment intent
-        if (order.getStripePaymentIntentId() != null) {
-            throw new RuntimeException("Order already has a payment intent");
-        }
-
         try {
             // Convert amount to cents (Stripe uses smallest currency unit)
             long amountInCents = order.getTotalAmount()
@@ -62,9 +57,6 @@ public class PaymentService {
 
             PaymentIntent paymentIntent = PaymentIntent.create(params);
 
-            // Update order with payment intent ID
-            orderService.updateOrderPaymentIntent(orderId, paymentIntent.getId());
-
             return PaymentIntentResponse.builder()
                     .clientSecret(paymentIntent.getClientSecret())
                     .paymentIntentId(paymentIntent.getId())
@@ -84,11 +76,9 @@ public class PaymentService {
             PaymentIntent paymentIntent = PaymentIntent.retrieve(paymentIntentId);
 
             if ("succeeded".equals(paymentIntent.getStatus())) {
-                // Find order by payment intent ID
-                Order order = orderRepository.findByStripePaymentIntentId(paymentIntentId);
-                if (order != null) {
-                    // Update order status to PAID
-                    orderService.updateOrderStatus(order.getId(), OrderStatus.PAID);
+                String orderId = paymentIntent.getMetadata().get("orderId");
+                if (orderId != null) {
+                    orderService.updateOrderStatus(orderId, OrderStatus.PAID);
                 }
             }
         } catch (StripeException e) {

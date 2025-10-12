@@ -19,7 +19,6 @@ public class OrderResponse {
     private List<OrderItemDTO> items;
     private BigDecimal totalAmount;
     private OrderStatus status;
-    private String stripePaymentIntentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

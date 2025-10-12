@@ -20,9 +20,4 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     @Query("SELECT o FROM Order o WHERE o.user.id = :userId ORDER BY o.createdAt DESC")
     List<Order> findByUserId(@Param("userId") String userId);
 
-    /**
-     * Find order by Stripe payment intent ID
-     */
-    @Query("SELECT o FROM Order o WHERE o.stripePaymentIntentId = :paymentIntentId")
-    Order findByStripePaymentIntentId(@Param("paymentIntentId") String paymentIntentId);
 }

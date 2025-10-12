@@ -55,7 +55,7 @@ public class OrderService {
         }
 
         BigDecimal totalAmount = cartItems.stream()
-                .map(item -> item.getProduct().getPrice()
+                .map(item -> BigDecimal.valueOf(item.getProduct().getPrice())
                         .multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -74,9 +74,8 @@ public class OrderService {
                         .order(savedOrder)
                         .product(cartItem.getProduct())
                         .quantity(cartItem.getQuantity())
-                        .price(cartItem.getProduct().getPrice())
+                        .price(BigDecimal.valueOf(cartItem.getProduct().getPrice()))
                         .createdAt(LocalDateTime.now())
-                        .updatedAt(LocalDateTime.now())
                         .build())
                 .collect(Collectors.toList());
 
@@ -100,16 +99,6 @@ public class OrderService {
         return mapToResponse(updatedOrder);
     }
 
-    @Transactional
-    public void updateOrderPaymentIntent(String orderId, String paymentIntentId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-
-        order.setStripePaymentIntentId(paymentIntentId);
-        order.setUpdatedAt(LocalDateTime.now());
-        orderRepository.save(order);
-    }
-
     private OrderResponse mapToResponse(Order order) {
         List<OrderItemDTO> itemDTOs = order.getItems().stream()
                 .map(this::mapOrderItemToDTO)
@@ -120,7 +109,6 @@ public class OrderService {
                 .items(itemDTOs)
                 .totalAmount(order.getTotalAmount())
                 .status(order.getStatus())
-                .stripePaymentIntentId(order.getStripePaymentIntentId())
                 .createdAt(order.getCreatedAt())
                 .updatedAt(order.getUpdatedAt())
                 .build();
@@ -132,12 +120,14 @@ public class OrderService {
 
         ProductResponse productResponse = ProductResponse.builder()
                 .id(product.getId())
-                .name(product.getName())
+                .slug(product.getSlug())
+                .title(product.getTitle())
                 .description(product.getDescription())
                 .price(product.getPrice())
-                .category(product.getCategory())
                 .imageUrl(product.getImageUrl())
                 .stock(product.getStock())
+                .rating(product.getRating())
+                .tags(product.getTags())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();
