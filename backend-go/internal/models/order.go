@@ -18,12 +18,12 @@ const (
 
 // Order represents a customer order
 type Order struct {
-	ID        string      `gorm:"primaryKey;type:varchar(30)" json:"id"`
-	UserID    string      `gorm:"not null;index" json:"userId"`
-	Total     int         `gorm:"not null" json:"total"` // Total amount in cents
-	Status    OrderStatus `gorm:"type:varchar(20);default:'PENDING';index" json:"status"`
-	CreatedAt time.Time   `gorm:"autoCreateTime;index" json:"createdAt"`
-	UpdatedAt time.Time   `gorm:"autoUpdateTime" json:"updatedAt"`
+	ID        string      `gorm:"primaryKey;type:varchar(30);column:id" json:"id"`
+	UserID    string      `gorm:"not null;index;column:userId" json:"userId"`
+	Total     int         `gorm:"not null;column:total" json:"total"` // Total amount in cents
+	Status    OrderStatus `gorm:"type:varchar(20);default:'PENDING';index;column:status" json:"status"`
+	CreatedAt time.Time   `gorm:"autoCreateTime;index;column:createdAt" json:"createdAt"`
+	UpdatedAt time.Time   `gorm:"autoUpdateTime;column:updatedAt" json:"updatedAt"`
 
 	// Relations
 	User  User        `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE" json:"user,omitempty"`
@@ -37,12 +37,12 @@ func (Order) TableName() string {
 
 // OrderItem represents an item in an order (snapshot at time of purchase)
 type OrderItem struct {
-	ID        string    `gorm:"primaryKey;type:varchar(30)" json:"id"`
-	OrderID   string    `gorm:"not null;index" json:"orderId"`
-	ProductID string    `gorm:"not null" json:"productId"`
-	Quantity  int       `gorm:"not null" json:"quantity"`
-	Price     int       `gorm:"not null" json:"price"` // Price at time of purchase (cents)
-	CreatedAt time.Time `gorm:"autoCreateTime" json:"createdAt"`
+	ID        string    `gorm:"primaryKey;type:varchar(30);column:id" json:"id"`
+	OrderID   string    `gorm:"not null;index;column:orderId" json:"orderId"`
+	ProductID string    `gorm:"not null;column:productId" json:"productId"`
+	Quantity  int       `gorm:"not null;column:quantity" json:"quantity"`
+	Price     int       `gorm:"not null;column:price" json:"price"` // Price at time of purchase (cents)
+	CreatedAt time.Time `gorm:"autoCreateTime;column:createdAt" json:"createdAt"`
 
 	// Relations
 	Order   Order   `gorm:"foreignKey:OrderID;constraint:OnDelete:CASCADE" json:"-"`
