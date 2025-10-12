@@ -11,6 +11,8 @@ require (
 
 require github.com/golang-jwt/jwt/v5 v5.3.0
 
+require github.com/stripe/stripe-go/v76 v76.25.0 // indirect
+
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect

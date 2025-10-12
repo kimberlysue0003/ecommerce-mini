@@ -91,12 +91,14 @@ func setupRoutes(router *gin.Engine) {
 	productService := services.GetProductService()
 	cartService := services.GetCartService()
 	orderService := services.GetOrderService()
+	paymentService := services.GetPaymentService()
 
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(authService)
 	productHandler := handlers.NewProductHandler(productService)
 	cartHandler := handlers.NewCartHandler(cartService)
 	orderHandler := handlers.NewOrderHandler(orderService)
+	paymentHandler := handlers.NewPaymentHandler(paymentService)
 
 	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
@@ -145,6 +147,16 @@ func setupRoutes(router *gin.Engine) {
 			orders.POST("/from-cart", orderHandler.CreateOrderFromCart)
 			orders.GET("", orderHandler.GetUserOrders)
 			orders.GET("/:id", orderHandler.GetOrderByID)
+		}
+
+		// Payment routes (require authentication)
+		payment := api.Group("/payment")
+		payment.Use(middleware.AuthMiddleware())
+		{
+			payment.POST("/create-payment-intent", paymentHandler.CreatePaymentIntent)
+			payment.POST("/create-order-with-payment", paymentHandler.CreateOrderWithPayment)
+			payment.POST("/confirm", paymentHandler.ConfirmPayment)
+			payment.GET("/config", paymentHandler.GetPublishableKey)
 		}
 
 		// Placeholder endpoint
