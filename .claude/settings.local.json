@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//h/Test/ecommerce-listr/src/services/**)",
+      "Read(//h/Test/ecommerce-listr/src/pages/**)",
+      "Read(//h/Test/ecommerce-listr/**)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(curl:*)",
+      "Bash(python:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(npm run dev:*)",
+      "Bash(git log:*)",
+      "Bash(git push:*)",
+      "Bash(git fetch:*)",
+      "Bash(git shortlog:*)",
+      "Bash(git reset:*)",
+      "Bash(cat:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git rm:*)",
+      "Bash(go get:*)",
+      "Bash(go mod:*)",
+      "Bash(go run:*)",
+      "Bash(go test -v ./internal/services -run TestAuthService)",
+      "Bash(psql:*)",
+      "Bash(go test -v ./internal/utils)",
+      "Bash(go test ./... -coverprofile=coverage.out -covermode=atomic)",
+      "Bash(git checkout:*)",
+      "Bash(go test -v ./internal/services -run TestProduct)",
+      "Bash(mkdir:*)",
+      "Bash(mvn:*)",
+      "Bash(taskkill:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

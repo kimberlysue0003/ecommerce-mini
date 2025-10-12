@@ -51,9 +51,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const user = await response.json();
         setState({
-          user: data.data,
+          user,
           token,
           isAuthenticated: true,
           isLoading: false,
@@ -95,7 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const data = await response.json();
-      const { token, user } = data.data;
+      const { token, user } = data;
 
       setAuthToken(token);
       setState({

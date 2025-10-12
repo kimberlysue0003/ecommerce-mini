@@ -1,7 +1,7 @@
 // API configuration for backend integration
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
-export const GRAPHQL_URL = import.meta.env.VITE_GRAPHQL_URL || 'http://localhost:3000/graphql';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
+export const GRAPHQL_URL = import.meta.env.VITE_GRAPHQL_URL || 'http://localhost:3002/graphql';
 
 // API helper functions
 export async function fetchAPI(endpoint: string, options?: RequestInit) {
