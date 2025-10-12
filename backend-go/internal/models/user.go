@@ -6,12 +6,12 @@ import (
 
 // User represents a user in the system
 type User struct {
-	ID        string    `gorm:"primaryKey;type:varchar(30)" json:"id"`
-	Email     string    `gorm:"uniqueIndex;not null" json:"email" binding:"required,email"`
-	Password  string    `gorm:"not null" json:"-"` // Never expose password in JSON
-	Name      *string   `json:"name"`
-	CreatedAt time.Time `gorm:"autoCreateTime" json:"createdAt"`
-	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updatedAt"`
+	ID        string    `gorm:"primaryKey;type:varchar(30);column:id" json:"id"`
+	Email     string    `gorm:"uniqueIndex;not null;column:email" json:"email" binding:"required,email"`
+	Password  string    `gorm:"not null;column:password" json:"-"` // Never expose password in JSON
+	Name      *string   `gorm:"column:name" json:"name"`
+	CreatedAt time.Time `gorm:"autoCreateTime;column:createdAt" json:"createdAt"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime;column:updatedAt" json:"updatedAt"`
 
 	// Relations (omit in JSON by default to avoid circular references)
 	CartItems     []CartItem     `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE" json:"cartItems,omitempty"`

@@ -11,6 +11,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kimberlysue0003/ecommerce-mini/backend-go/internal/config"
+	"github.com/kimberlysue0003/ecommerce-mini/backend-go/internal/handlers"
+	"github.com/kimberlysue0003/ecommerce-mini/backend-go/internal/middleware"
+	"github.com/kimberlysue0003/ecommerce-mini/backend-go/internal/services"
 	"github.com/kimberlysue0003/ecommerce-mini/backend-go/internal/utils"
 )
 
@@ -83,6 +86,12 @@ func setupMiddleware(router *gin.Engine, cfg *config.Config) {
 }
 
 func setupRoutes(router *gin.Engine) {
+	// Initialize services
+	authService := services.GetAuthService()
+
+	// Initialize handlers
+	authHandler := handlers.NewAuthHandler(authService)
+
 	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -96,10 +105,13 @@ func setupRoutes(router *gin.Engine) {
 	// API routes group
 	api := router.Group("/api")
 	{
-		// TODO: Add auth routes
-		// api.POST("/auth/register", authHandler.Register)
-		// api.POST("/auth/login", authHandler.Login)
-		// api.GET("/auth/me", authMiddleware, authHandler.Me)
+		// Auth routes
+		auth := api.Group("/auth")
+		{
+			auth.POST("/register", authHandler.Register)
+			auth.POST("/login", authHandler.Login)
+			auth.GET("/me", middleware.AuthMiddleware(), authHandler.GetMe)
+		}
 
 		// TODO: Add product routes
 		// api.GET("/products", productHandler.List)
