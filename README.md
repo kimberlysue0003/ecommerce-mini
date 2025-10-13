@@ -16,6 +16,8 @@
 ![Express](https://img.shields.io/badge/Express-4-000000?logo=express&logoColor=white)
 ![Go](https://img.shields.io/badge/Go-1.22-00ADD8?logo=go&logoColor=white)
 ![Gin](https://img.shields.io/badge/Gin-Web_Framework-00ADD8?logo=go&logoColor=white)
+![Java](https://img.shields.io/badge/Java-17-007396?logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.0-6DB33F?logo=spring-boot&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma&logoColor=white)
 ![GORM](https://img.shields.io/badge/GORM-ORM-00ADD8?logo=go&logoColor=white)
@@ -41,7 +43,7 @@ A **production-deployed** Full-Stack E-commerce Application built by **Kimberly 
 - React Router v7
 - TanStack Query
 
-### Backend (Dual Implementation)
+### Backend (Triple Implementation)
 
 **Node.js Backend (Production - `main` branch)**
 - Node.js 20 + TypeScript 5.7
@@ -49,14 +51,24 @@ A **production-deployed** Full-Stack E-commerce Application built by **Kimberly 
 - GraphQL (graphql-yoga)
 - PostgreSQL 16 + Prisma ORM
 - JWT Authentication
+- **Status**: Currently deployed in production
 
-**Go Backend (Alternative - `backend/go-refactor` branch)**
+**Go Backend (High-Performance - `backend/go-refactor` branch)**
 - Go 1.22 + Gin Web Framework
 - RESTful API with complete feature parity
 - PostgreSQL 16 + GORM ORM
 - JWT Authentication (golang-jwt)
 - TF-IDF AI algorithms
 - **Performance**: 3-5x faster, 70% less memory
+
+**Java Spring Boot Backend (Enterprise - `backend/java-refactor` branch)**
+- Java 17 + Spring Boot 3.2.0
+- Spring Security + JWT Authentication
+- RESTful API + GraphQL (Spring GraphQL)
+- PostgreSQL 16 + JPA/Hibernate
+- TF-IDF AI algorithms
+- Stripe Payment Integration
+- **Enterprise-grade**: Comprehensive security, production-ready
 
 ### AI Features (Free - No External APIs)
 - Rule-based NLP query parsing
@@ -300,7 +312,7 @@ ecommerce-mini/
 │   ├── docker-compose.yml
 │   └── README.md              # Backend docs
 │
-├── backend-go/                # Go Backend (Alternative)
+├── backend-go/                # Go Backend (High-Performance)
 │   ├── cmd/api/               # Application entry point
 │   ├── internal/
 │   │   ├── config/            # Database, env config
@@ -312,6 +324,23 @@ ecommerce-mini/
 │   ├── go.mod                 # Go dependencies
 │   ├── UNIT-TEST-RESULTS.md   # Test documentation
 │   └── coverage.out           # Test coverage report
+│
+├── backend-java/              # Java Spring Boot Backend (Enterprise)
+│   ├── src/main/java/com/ecommerce/mini/
+│   │   ├── config/            # Security, Stripe, Database config
+│   │   ├── controller/        # REST Controllers
+│   │   ├── dto/              # Data Transfer Objects
+│   │   ├── entity/           # JPA Entities
+│   │   ├── repository/       # Data Access Layer (JPA)
+│   │   ├── service/          # Business Logic + AI algorithms
+│   │   ├── graphql/          # GraphQL Resolvers
+│   │   ├── security/         # JWT Authentication Filter
+│   │   └── util/             # Utilities (JWT)
+│   ├── src/main/resources/
+│   │   ├── graphql/          # GraphQL Schema
+│   │   └── application.properties
+│   ├── pom.xml               # Maven dependencies
+│   └── target/               # Build output
 │
 ├── .github/workflows/         # CI/CD pipeline
 └── README.md                  # This file
@@ -431,10 +460,10 @@ VITE_GRAPHQL_URL=https://api.quickshop.fit/graphql
 This project demonstrates:
 
 ✅ **Full-Stack TypeScript** - End-to-end type safety across frontend & backend
-✅ **Dual Backend Architecture** - Node.js (production) + Go (high-performance alternative)
+✅ **Triple Backend Architecture** - Node.js (production) + Go (performance) + Java Spring Boot (enterprise)
 ✅ **RESTful + GraphQL** - Dual API architecture for flexibility
-✅ **Database Design** - Normalized PostgreSQL schema with Prisma ORM + GORM
-✅ **Authentication & Authorization** - Secure JWT implementation (both stacks)
+✅ **Database Design** - Normalized PostgreSQL schema with Prisma ORM + GORM + JPA/Hibernate
+✅ **Authentication & Authorization** - Secure JWT implementation (all three stacks)
 ✅ **Payment Processing** - Stripe integration with secure checkout flow
 ✅ **AI/ML Algorithms** - Custom TF-IDF & collaborative filtering (no external APIs)
 ✅ **Go Performance** - 3-5x faster response time, 70% less memory usage
@@ -460,6 +489,12 @@ This project demonstrates:
 - **Unit Test Results:** [backend-go/UNIT-TEST-RESULTS.md](./backend-go/UNIT-TEST-RESULTS.md)
 - **Migration Plan:** [go-migrate-plan.md](./go-migrate-plan.md)
 - **Test Coverage:** 47 tests, 100% pass rate, 15% overall coverage
+
+**Java Spring Boot Backend:** (branch: `backend/java-refactor`)
+- **Full-Stack Implementation:** RESTful API + GraphQL + AI Features
+- **Enterprise Security:** Spring Security + JWT Authentication
+- **Payment Integration:** Stripe SDK fully integrated
+- **Tech Stack:** Java 17 + Spring Boot 3.2.0 + JPA/Hibernate + PostgreSQL
 
 ---
 
@@ -495,7 +530,8 @@ MIT License - Feel free to use this project for learning or portfolio purposes!
 Built to showcase:
 - **Production-Ready Full-Stack Development** - Real deployed application on AWS
 - **TypeScript Mastery** - End-to-end type safety and modern patterns
-- **Go Backend Engineering** - High-performance alternative with complete feature parity
+- **Polyglot Backend Engineering** - Node.js + Go + Java Spring Boot with complete feature parity
+- **Enterprise Java Development** - Spring Boot 3.2, Spring Security, JPA/Hibernate
 - **Cloud Architecture** - AWS EC2, RDS, Amplify infrastructure design
 - **Payment Integration** - Stripe payment processing implementation
 - **RESTful + GraphQL APIs** - Dual API architecture design
@@ -503,7 +539,7 @@ Built to showcase:
 - **Comprehensive Testing** - 47 unit tests with 100% pass rate
 - **DevOps Excellence** - Nginx, PM2, SSL automation, CI/CD pipelines
 - **Security Best Practices** - HTTPS, authentication, rate limiting, validation
-- **Database Engineering** - PostgreSQL schema design with Prisma ORM + GORM
+- **Database Engineering** - PostgreSQL schema design with Prisma ORM + GORM + JPA
 - **Clean Architecture** - Scalable, maintainable codebase structure
 - **Performance Optimization** - Go backend: 3-5x faster, 70% less memory
 
