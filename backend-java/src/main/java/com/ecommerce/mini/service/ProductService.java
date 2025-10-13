@@ -46,12 +46,14 @@ public class ProductService {
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request) {
         Product product = Product.builder()
-                .name(request.getName())
+                .slug(request.getSlug())
+                .title(request.getTitle())
                 .description(request.getDescription())
                 .price(request.getPrice())
-                .category(request.getCategory())
                 .imageUrl(request.getImageUrl())
                 .stock(request.getStock())
+                .rating(request.getRating() != null ? request.getRating() : 0.0)
+                .tags(request.getTags())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
@@ -68,12 +70,14 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
 
-        product.setName(request.getName());
+        product.setSlug(request.getSlug());
+        product.setTitle(request.getTitle());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
-        product.setCategory(request.getCategory());
         product.setImageUrl(request.getImageUrl());
         product.setStock(request.getStock());
+        product.setRating(request.getRating() != null ? request.getRating() : product.getRating());
+        product.setTags(request.getTags());
         product.setUpdatedAt(LocalDateTime.now());
 
         Product updatedProduct = productRepository.save(product);
@@ -101,15 +105,6 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Get products by category
-     */
-    public List<ProductResponse> getProductsByCategory(String category) {
-        return productRepository.findByCategory(category)
-                .stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
 
     /**
      * Map Product entity to ProductResponse DTO
@@ -117,12 +112,14 @@ public class ProductService {
     private ProductResponse mapToResponse(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
-                .name(product.getName())
+                .slug(product.getSlug())
+                .title(product.getTitle())
                 .description(product.getDescription())
                 .price(product.getPrice())
-                .category(product.getCategory())
                 .imageUrl(product.getImageUrl())
                 .stock(product.getStock())
+                .rating(product.getRating())
+                .tags(product.getTags())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();

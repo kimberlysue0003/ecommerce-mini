@@ -21,19 +21,12 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     List<Product> findAllByOrderByCreatedAtDesc();
 
     /**
-     * Search products by name or description (case-insensitive)
+     * Search products by title or description (case-insensitive)
      * @param keyword search keyword
      * @return list of matching products
      */
     @Query("SELECT p FROM Product p WHERE " +
-           "LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Product> searchProducts(@Param("keyword") String keyword);
-
-    /**
-     * Find products by category
-     * @param category product category
-     * @return list of products in the category
-     */
-    List<Product> findByCategory(String category);
 }

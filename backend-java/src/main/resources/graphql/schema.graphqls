@@ -1,0 +1,135 @@
+# GraphQL Schema for E-commerce API
+
+# ============= Types =============
+
+type Product {
+    id: ID!
+    slug: String!
+    title: String!
+    description: String
+    price: Int!
+    imageUrl: String
+    stock: Int!
+    rating: Float!
+    tags: [String!]!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type User {
+    id: ID!
+    email: String!
+    username: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type CartItem {
+    id: ID!
+    product: Product!
+    quantity: Int!
+    subtotal: Float!
+}
+
+type OrderItem {
+    id: ID!
+    product: Product!
+    quantity: Int!
+    price: Float!
+    subtotal: Float!
+}
+
+type Order {
+    id: ID!
+    items: [OrderItem!]!
+    totalAmount: Float!
+    status: String!
+    stripePaymentIntentId: String
+    createdAt: String!
+    updatedAt: String!
+}
+
+type AuthPayload {
+    token: String!
+    user: User!
+}
+
+type AISearchResult {
+    results: [Product!]!
+    query: String!
+    count: Int!
+}
+
+# ============= Inputs =============
+
+input ProductFilter {
+    search: String
+    tags: String
+    minPrice: Int
+    maxPrice: Int
+}
+
+input RegisterInput {
+    email: String!
+    password: String!
+    username: String!
+}
+
+input LoginInput {
+    email: String!
+    password: String!
+}
+
+input AddToCartInput {
+    productId: ID!
+    quantity: Int!
+}
+
+input UpdateCartItemInput {
+    quantity: Int!
+}
+
+input CreateOrderInput {
+    cartItemIds: [ID!]!
+}
+
+# ============= Queries =============
+
+type Query {
+    # Product queries
+    products(filter: ProductFilter, limit: Int, offset: Int): [Product!]!
+    product(id: ID!): Product
+    productBySlug(slug: String!): Product
+
+    # Auth queries
+    me: User
+
+    # Cart queries
+    cart: [CartItem!]!
+
+    # Order queries
+    orders: [Order!]!
+    order(id: ID!): Order
+
+    # AI queries
+    aiSearch(query: String!): AISearchResult!
+    recommendations(productId: ID): [Product!]!
+    similarProducts(productId: ID!): [Product!]!
+}
+
+# ============= Mutations =============
+
+type Mutation {
+    # Auth mutations
+    register(input: RegisterInput!): AuthPayload!
+    login(input: LoginInput!): AuthPayload!
+
+    # Cart mutations
+    addToCart(input: AddToCartInput!): CartItem!
+    updateCartItem(itemId: ID!, input: UpdateCartItemInput!): CartItem!
+    removeFromCart(itemId: ID!): Boolean!
+    clearCart: Boolean!
+
+    # Order mutations
+    createOrder(input: CreateOrderInput!): Order!
+}

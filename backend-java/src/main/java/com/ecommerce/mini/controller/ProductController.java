@@ -27,15 +27,12 @@ public class ProductController {
      */
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts(
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) String category) {
+            @RequestParam(required = false) String search) {
 
         List<ProductResponse> products;
 
         if (search != null && !search.isEmpty()) {
             products = productService.searchProducts(search);
-        } else if (category != null && !category.isEmpty()) {
-            products = productService.getProductsByCategory(category);
         } else {
             products = productService.getAllProducts();
         }

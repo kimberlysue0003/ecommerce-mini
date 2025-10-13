@@ -46,6 +46,8 @@ public class SecurityConfig {
                         .requestMatchers("/products/**").permitAll()
                         .requestMatchers("/ai/**").permitAll()
                         .requestMatchers("/payment/webhook").permitAll() // Stripe webhook
+                        .requestMatchers("/graphql").permitAll() // GraphQL endpoint
+                        .requestMatchers("/graphiql").permitAll() // GraphQL playground
                         // Protected endpoints
                         .requestMatchers("/cart/**").authenticated()
                         .requestMatchers("/orders/**").authenticated()
@@ -94,6 +96,7 @@ public class SecurityConfig {
     @Bean
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
         org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:5173");
         configuration.addAllowedOrigin("http://localhost:5174");
         configuration.addAllowedOrigin("http://localhost:5175");
         configuration.addAllowedOrigin("http://localhost:5176");

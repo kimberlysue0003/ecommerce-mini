@@ -124,16 +124,18 @@ public class CartService {
      */
     private CartItemResponse mapToResponse(CartItem cartItem) {
         Product product = cartItem.getProduct();
-        BigDecimal subtotal = product.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+        BigDecimal subtotal = BigDecimal.valueOf(product.getPrice()).multiply(BigDecimal.valueOf(cartItem.getQuantity()));
 
         ProductResponse productResponse = ProductResponse.builder()
                 .id(product.getId())
-                .name(product.getName())
+                .slug(product.getSlug())
+                .title(product.getTitle())
                 .description(product.getDescription())
                 .price(product.getPrice())
-                .category(product.getCategory())
                 .imageUrl(product.getImageUrl())
                 .stock(product.getStock())
+                .rating(product.getRating())
+                .tags(product.getTags())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();

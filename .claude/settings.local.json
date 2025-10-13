@@ -30,7 +30,16 @@
       "Bash(go test -v ./internal/services -run TestProduct)",
       "Bash(mkdir:*)",
       "Bash(mvn:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(timeout 30 cmd /c \"for /L %i in (1,1,30) do @(netstat -ano | findstr :8080 | findstr LISTENING >nul && echo Server is ready && exit /b 0 || timeout /t 1 >nul) && echo Timeout waiting for server\")",
+      "Bash(del ProductResolver.java AuthResolver.java AIResolver.java)",
+      "Bash(cmd /c:*)",
+      "Bash(timeout 30 cmd /c \"for /L %i in (1,1,30) do @(netstat -ano | findstr :3002 | findstr LISTENING >nul && echo Server is ready && exit /b 0 || timeout /t 1 >nul) && echo Timeout waiting for server\")",
+      "Bash(timeout 30 cmd /c \"for /L %i in (1,1,30) do @(netstat -ano | findstr :3002 | findstr LISTENING >nul && echo Server ready && exit /b 0 || timeout /t 1 >nul)\")",
+      "Bash(timeout 35 cmd /c \"for /L %i in (1,1,35) do @(netstat -ano | findstr :3002 | findstr LISTENING >nul && echo Ready && exit /b 0 || timeout /t 1 >nul)\")",
+      "Bash(timeout:*)",
+      "Bash(tee:*)",
+      "Bash(java:*)"
     ],
     "deny": [],
     "ask": []

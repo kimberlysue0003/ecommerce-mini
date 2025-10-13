@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,29 +28,26 @@ public class Product {
     @Column(name = "id", length = 30)
     private String id;
 
-    @Column(name = "name", nullable = false, length = 255)
-    private String name;
+    @Column(name = "slug", nullable = false, unique = true, length = 255)
+    private String slug;
+
+    @Column(name = "title", nullable = false, length = 255)
+    private String title;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    @Column(name = "price", nullable = false)
+    private Integer price;  // Price in cents (e.g., 49900 = $499.00)
 
-    @Column(name = "image", length = 500)
+    @Column(name = "\"imageUrl\"", length = 500)
     private String imageUrl;
-
-    @Column(name = "category", length = 100)
-    private String category;
 
     @Column(name = "stock", nullable = false)
     private Integer stock;
 
-    @Column(name = "rating", precision = 3, scale = 2)
-    private BigDecimal rating;
-
-    @Column(name = "reviews")
-    private Integer reviews;
+    @Column(name = "rating", nullable = false)
+    private Double rating;
 
     @Column(name = "tags", columnDefinition = "TEXT[]")
     private String[] tags;
@@ -63,9 +59,11 @@ public class Product {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<CartItem> cartItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @PrePersist
